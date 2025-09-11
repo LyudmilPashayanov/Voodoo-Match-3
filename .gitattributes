@@ -1,0 +1,22 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Source code should always use LF
+*.cs text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf
+*.hlsl text eol=lf
+*.compute text eol=lf
+
+# YAML files (Unity scenes, prefabs, etc.)
+*.unity text eol=lf
+*.prefab text eol=lf
+*.mat text eol=lf
+*.anim text eol=lf
+*.controller text eol=lf
+*.asset text eol=lf
+*.meta text eol=lf
+
+# Shell / scripts
+*.sh text eol=lf
+*.bat text eol=crlf

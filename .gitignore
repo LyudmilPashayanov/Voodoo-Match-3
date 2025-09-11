@@ -1,0 +1,57 @@
+# =============== #
+# Unity Generated #
+# =============== #
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+Recordings/
+ 
+# Unity auto-generated packages
+[Pp]ackages/com.unity.package-manager-do-not-modify/
+[Pp]ackageCache/
+
+# =============== #
+# OS Generated    #
+# =============== #
+.DS_Store
+Thumbs.db
+
+# =============== #
+# IDEs / Editors  #
+# =============== #
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+
+# =============== #
+# Build Artifacts #
+# =============== #
+*.apk
+*.aab
+*.xcodeproj
+*.xcworkspace
+*.xcuserstate
+*.ipa
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+*.mdb
+
+# =============== #
+# Crash reports   #
+# =============== #
+sysinfo.txt
