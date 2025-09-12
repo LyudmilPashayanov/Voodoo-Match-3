@@ -1,6 +1,8 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using Voodoo.Gameplay;
 using Grid = Voodoo.Gameplay.Grid;
 
@@ -15,24 +17,32 @@ namespace Voodoo
     /// /// </summary>
     public class BootManager : MonoBehaviour
     {
+        [SerializeField] private AssetReferenceT<PieceSetConfig> pieceSetConfigRef;
         [SerializeField] private GameviewController _gameviewController;
         private GameManager _gameManager;
-        
+
         private void Start()
         {
-            Initialize();
-            StartGame();
+            pieceSetConfigRef.LoadAssetAsync().Completed += OnPieceSetLoaded;
+            // Maybe in the future I wiill have to load other data?
         }
 
-        private void Initialize()
+        private void OnPieceSetLoaded(AsyncOperationHandle<PieceSetConfig> handle)
         {
-            Grid gameGrid = new Grid(5,5);
-            _gameManager = new GameManager(gameGrid);
-        }
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                PieceSetConfig config = handle.Result;
 
-        private void StartGame()
-        {
-            //_gameManager.StartGame();
+                Grid grid = new Grid(5, 5, config.availableTypes);
+
+                GameManager gameManager = new GameManager(grid);
+
+                //gameManager.StartGame();
+            }
+            else
+            {
+                Debug.LogError("Failed to load PieceSetConfig");
+            }
         }
     }
 }

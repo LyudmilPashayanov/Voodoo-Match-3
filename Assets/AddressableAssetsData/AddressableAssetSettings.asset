@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
+  m_Name: AddressableAssetSettings
+  m_EditorClassIdentifier: 
+  m_DefaultGroup: fa1a6d17c24ccd049b50d053236efb15
+  m_currentHash:
+    serializedVersion: 2
+    Hash: 849c035d9a7fc9df4ea79e049804e9fa
+  m_OptimizeCatalogSize: 0
+  m_BuildRemoteCatalog: 0
+  m_BundleLocalCatalog: 0
+  m_CatalogRequestsTimeout: 0
+  m_DisableCatalogUpdateOnStart: 0
+  m_IgnoreUnsupportedFilesInBuild: 0
+  m_UniqueBundleIds: 0
+  m_NonRecursiveBuilding: 1
+  m_CCDEnabled: 0
+  m_maxConcurrentWebRequests: 3
+  m_ContiguousBundles: 1
+  m_StripUnityVersionFromBundleBuild: 0
+  m_DisableVisibleSubAssetRepresentations: 0
+  m_ShaderBundleNaming: 0
+  m_ShaderBundleCustomNaming: 
+  m_MonoScriptBundleNaming: 0
+  m_CheckForContentUpdateRestrictionsOption: 0
+  m_MonoScriptBundleCustomNaming: 
+  m_RemoteCatalogBuildPath:
+    m_Id: 
+  m_RemoteCatalogLoadPath:
+    m_Id: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
+  m_CustomContentStateBuildPath: 
+  m_ContentStateBuildPath: 
+  m_BuildAddressablesWithPlayerBuild: 0
+  m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
+  m_GroupAssets:
+  - {fileID: 11400000, guid: 55522935d78c2d747871de7f3aaf06ff, type: 2}
+  - {fileID: 11400000, guid: 366ff9f24e2ae3e47b73abc5f73c3546, type: 2}
+  - {fileID: 11400000, guid: 3c55d7e96abfaa145b8be0062feab5ce, type: 2}
+  m_BuildSettings:
+    m_CompileScriptsInVirtualMode: 0
+    m_CleanupStreamingAssetsAfterBuilds: 1
+    m_LogResourceManagerExceptions: 1
+    m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
+  m_ProfileSettings:
+    m_Profiles:
+    - m_InheritedParent: 
+      m_Id: 0c22f15b9575fa44ca179ecd21814f0a
+      m_ProfileName: Default
+      m_Values:
+      - m_Id: f6febc060086eb1459360c43383f12c0
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: ba0bb66a5c074ee4f98c5db1456cc876
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 2b89298a19f377e41ab3c5b4fc8a5944
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: c331dd1f4d62e964f9b93d30bea9abfd
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: e31805d2225f65b44b4a56a5f40025c2
+        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+    m_ProfileEntryNames:
+    - m_Id: f6febc060086eb1459360c43383f12c0
+      m_Name: BuildTarget
+      m_InlineUsage: 0
+    - m_Id: ba0bb66a5c074ee4f98c5db1456cc876
+      m_Name: Local.BuildPath
+      m_InlineUsage: 0
+    - m_Id: 2b89298a19f377e41ab3c5b4fc8a5944
+      m_Name: Local.LoadPath
+      m_InlineUsage: 0
+    - m_Id: c331dd1f4d62e964f9b93d30bea9abfd
+      m_Name: Remote.BuildPath
+      m_InlineUsage: 0
+    - m_Id: e31805d2225f65b44b4a56a5f40025c2
+      m_Name: Remote.LoadPath
+      m_InlineUsage: 0
+    m_ProfileVersion: 1
+  m_LabelTable:
+    m_LabelNames:
+    - default
+  m_SchemaTemplates: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 5ab9db557638da048a9dca178ee6031a, type: 2}
+  m_InitializationObjects: []
+  m_CertificateHandlerType:
+    m_AssemblyName: 
+    m_ClassName: 
+  m_ActivePlayerDataBuilderIndex: 3
+  m_DataBuilders:
+  - {fileID: 11400000, guid: 3b2b7c8c786030f4a871a7471045055b, type: 2}
+  - {fileID: 11400000, guid: 370ef6e044d6f704b9a1392446bc2816, type: 2}
+  - {fileID: 11400000, guid: 3c47a597c462c2044af9eab2920f1acb, type: 2}
+  - {fileID: 11400000, guid: 769ac66e9278d344b9502ad508d28751, type: 2}
+  m_ActiveProfileId: 0c22f15b9575fa44ca179ecd21814f0a
+  m_HostingServicesManager:
+    m_HostingServiceInfos: []
+    m_Settings: {fileID: 11400000}
+    m_NextInstanceId: 0
+    m_RegisteredServiceTypeRefs: []
+    m_PingTimeoutInMilliseconds: 5000
