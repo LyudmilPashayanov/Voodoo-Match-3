@@ -1,14 +1,12 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Voodoo.Gameplay;
+using Voodoo.UI;
 using Grid = Voodoo.Gameplay.Grid;
 
 namespace Voodoo
 {
-
     /// <summary>
     /// This class is the first thing that runs in the game.
     /// It is responsible to create the classes in the required order
@@ -18,8 +16,7 @@ namespace Voodoo
     public class BootManager : MonoBehaviour
     {
         [SerializeField] private AssetReferenceT<PieceSetConfig> pieceSetConfigRef;
-        [SerializeField] private GameviewController _gameviewController;
-        private GameManager _gameManager;
+        [SerializeField] private UIManager _UIManager;
 
         private void Start()
         {
@@ -33,16 +30,23 @@ namespace Voodoo
             {
                 PieceSetConfig config = handle.Result;
 
-                Grid grid = new Grid(5, 5, config.availableTypes);
-
-                GameManager gameManager = new GameManager(grid);
-
-                //gameManager.StartGame();
+                Init(config);
             }
             else
             {
                 Debug.LogError("Failed to load PieceSetConfig");
             }
+        }
+
+        private void Init(PieceSetConfig pieceSetConfig)
+        {
+            Grid grid = new Grid(5, 5, pieceSetConfig.availableTypes);
+
+            GameManager gameManager = new GameManager(grid);
+           
+            _UIManager.Init(gameManager);
+
+            //gameManager.StartGame();
         }
     }
 }
