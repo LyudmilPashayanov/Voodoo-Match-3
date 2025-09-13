@@ -9,13 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 426a28bbbfe54a44a910fed8ad1de7e4, type: 3}
-  m_Name: Red_PieceType
+  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
+  m_Name: PieceTypes_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  id: red
-  prefabReference:
-    m_AssetGUID: 0c8c13420cb945f498fb9f67b76d01b0
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  displayColor: {r: 1, g: 0, b: 0, a: 1}
+  m_Group: {fileID: 11400000, guid: 3c55d7e96abfaa145b8be0062feab5ce, type: 2}
+  m_StaticContent: 0

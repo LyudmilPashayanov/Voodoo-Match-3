@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Blue_PieceType
   m_EditorClassIdentifier: 
   id: blue
-  prefab: {fileID: 1033463737706598466, guid: b5b0eed0912c66b4093a388428a5fa4c, type: 3}
+  prefabReference:
+    m_AssetGUID: b5b0eed0912c66b4093a388428a5fa4c
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   displayColor: {r: 0, g: 0.29543877, b: 1, a: 1}

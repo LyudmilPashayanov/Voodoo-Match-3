@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(fileName = "PieceType", menuName = "Match3/Piece Type", order = 0)]
 public class PieceTypeDefinition : ScriptableObject
@@ -7,7 +8,7 @@ public class PieceTypeDefinition : ScriptableObject
     public string id;
 
     [Tooltip("Prefab used for rendering this piece")]
-    public GameObject prefab;
+    public AssetReferenceGameObject prefabReference;
 
     [Tooltip("Optional color for debugging or UI")]
     public Color displayColor;

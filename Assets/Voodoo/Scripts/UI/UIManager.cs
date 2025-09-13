@@ -13,10 +13,10 @@ namespace Voodoo.UI
         private UIPanelView _activePanelView;
         private UIPanelView _pendingPanelView;
 
-        public void Init(GameManager gameManager)
+        public void Init(IGameFlow gameFlow)
         {
             MainMenuPresenter mainMenuPresenter = new MainMenuPresenter(_mainMenuView, this);
-            GameplayPresenter gameplayPresenter = new GameplayPresenter(_gameplayView, gameManager);
+            GameplayPresenter gameplayPresenter = new GameplayPresenter(_gameplayView, gameFlow);
             ShowMainMenu();
         }
         

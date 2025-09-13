@@ -12,5 +12,7 @@ namespace Voodoo.Gameplay
             Y = y;
             Type = type;
         }
+        
+        // overload the == operator maybe
     }
 }

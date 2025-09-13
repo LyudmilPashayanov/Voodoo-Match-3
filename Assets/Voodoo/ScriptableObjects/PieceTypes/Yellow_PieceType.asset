@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Yellow_PieceType
   m_EditorClassIdentifier: 
   id: yellow
-  prefab: {fileID: 151478, guid: 7779a198151193f45bc589e85e8d63d8, type: 3}
+  prefabReference:
+    m_AssetGUID: 7779a198151193f45bc589e85e8d63d8
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   displayColor: {r: 1, g: 0.85932004, b: 0, a: 1}

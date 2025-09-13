@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Orange_PieceType
   m_EditorClassIdentifier: 
   id: orange
-  prefab: {fileID: 1380794826816380136, guid: b22a70689ef64604b8d6748b543b9061, type: 3}
+  prefabReference:
+    m_AssetGUID: b22a70689ef64604b8d6748b543b9061
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   displayColor: {r: 1, g: 0.5185516, b: 0, a: 1}
