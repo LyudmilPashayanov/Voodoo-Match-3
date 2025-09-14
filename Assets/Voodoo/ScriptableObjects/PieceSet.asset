@@ -18,3 +18,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3777d457662af5d44ba150034b3de77d, type: 2}
   - {fileID: 11400000, guid: f3dcd8a0c743b274a8753287e07e0b33, type: 2}
   - {fileID: 11400000, guid: ccbe6133d210f8948bc525a74fd81a93, type: 2}
+  GridWidth: 8
+  GridHeight: 8

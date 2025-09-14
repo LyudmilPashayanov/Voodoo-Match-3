@@ -42,6 +42,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3363310cafb39384fbcebdb49393e1b2
+    m_Address: Assets/Voodoo/Prefabs/PiecePrefabs/Fruit_Bomb.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4e5c591be8d9ec240afe687638255120, type: 2}
   m_SchemaSet:

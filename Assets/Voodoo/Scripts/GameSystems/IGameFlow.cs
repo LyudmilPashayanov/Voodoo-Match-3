@@ -1,9 +1,14 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using Voodoo.Scripts.GameSystems.Utilities;
+
 namespace Voodoo.Gameplay
 {
     public interface IGameFlow
     { 
-        System.Threading.Tasks.Task StartGameAsync(System.Threading.CancellationToken ct = default);
-        System.Threading.Tasks.Task EndGameAsync();
+        IPiecePool Pool { get; }
+        UniTask StartGameAsync(CancellationToken ct = default);
+        UniTask EndGameAsync(CancellationToken ct = default);
         
         // Commands from UI
         void RequestSwap(int fromIndex, int toIndex);
@@ -17,6 +22,6 @@ namespace Voodoo.Gameplay
         event System.Action<int> ScoreChanged;
         event System.Action<int> TimeChanged;             // seconds remaining
         event System.Action GameOver;
-        event System.Action<int, int> BoardInitialized;   // width, height (optional)
+        event System.Action<int, int> GameLoaded;   // width, height (optional)
     }
 }

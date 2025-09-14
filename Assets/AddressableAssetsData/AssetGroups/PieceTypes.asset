@@ -42,6 +42,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 130f8293c27e7414997d15defb8c859a
+    m_Address: Assets/Voodoo/ScriptableObjects/PieceTypes/Bomb_PieceType.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4e5c591be8d9ec240afe687638255120, type: 2}
   m_SchemaSet:
