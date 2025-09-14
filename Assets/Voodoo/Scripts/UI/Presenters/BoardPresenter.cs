@@ -7,19 +7,25 @@ namespace Voodoo.UI.Controllers
         private readonly IPiecePool _pool;
         private readonly BoardView _view;
 
-        public BoardPresenter(IPiecePool pool)
+        public BoardPresenter(BoardView view, IPiecePool pool)
         {
+            _view = view;
             _pool = pool;
         }
         
         public void SpawnPiece(int index, PieceTypeDefinition type)
         {
-            _pool.Get(type);
+            _view.PlacePiece(_pool.Get(type), index);
         }
 
         public void InitializeBoard(int gridWidth, int gridHeight)
         {
-            
+            _view.InitializeBoard(gridWidth, gridHeight);
+        }
+
+        public void ClearPiece(int[] indices)
+        {
+            _view.ClearPieces(indices);
         }
     }
 }

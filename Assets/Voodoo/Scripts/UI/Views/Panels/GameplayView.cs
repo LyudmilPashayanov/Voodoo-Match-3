@@ -4,6 +4,9 @@ namespace Voodoo.UI.Panels
 {
     public class GameplayView: UIPanelView
     {
+        [SerializeField] private BoardView _boardView;
+
+        public BoardView BoardView => _boardView;
         
         protected override void OnViewLeft()
         {

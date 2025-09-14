@@ -69,7 +69,7 @@ namespace Voodoo.Gameplay
             int w = _grid.Width;
             int h = _grid.Height;
             
-            for (int y = h-1; y >= 0; y--)
+            for (int y = 0; y < h; y++)
             {
                 for (int x = 0; x <w ; x++)
                 {
@@ -105,14 +105,17 @@ namespace Voodoo.Gameplay
 
                 // fill
                 int w = _grid.Width, h = _grid.Height;
-                for (int y=h-1; y>=0; y--)
-                for (int x=0; x<w; x++)
+                for (int y = 0; y < h; y++)
                 {
-                    int i = y*w + x;
-                    if (_grid.Tiles[i] >= 0) continue;
-                    int t = _spawner.PickFiltered(_rng, typeId => !CreatesImmediateRun(_grid.Tiles, w, x, y, typeId));
-                    _grid.Tiles[i] = (sbyte)t;
-                    OnPieceSpawn?.Invoke(i, t);
+                    for (int x = 0; x < w; x++)
+                    {
+                        int i = y * w + x;
+                        if (_grid.Tiles[i] >= 0) continue;
+                        int t = _spawner.PickFiltered(_rng,
+                            typeId => !CreatesImmediateRun(_grid.Tiles, w, x, y, typeId));
+                        _grid.Tiles[i] = (sbyte)t;
+                        OnPieceSpawn?.Invoke(i, t);
+                    }
                 }
 
                 cascade++;

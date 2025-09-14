@@ -26,10 +26,14 @@ namespace Voodoo.UI.Controllers
 
         private void GameLoaded(int gridWidth, int gridHeight)
         {
-            _boardPresenter = new BoardPresenter(_gameFlow.Pool);
-            _boardPresenter.InitializeBoard(gridWidth, gridHeight);
-            _view.HideLoading();
+            _boardPresenter = new BoardPresenter(_view.BoardView, _gameFlow.Pool);
             
+            _boardPresenter.InitializeBoard(gridWidth, gridHeight);
+            
+            _gameFlow.PieceSpawned += _boardPresenter.SpawnPiece;
+            _gameFlow.PiecesCleared += _boardPresenter.ClearPiece;
+            
+            _view.HideLoading();
         }
     }
 }
