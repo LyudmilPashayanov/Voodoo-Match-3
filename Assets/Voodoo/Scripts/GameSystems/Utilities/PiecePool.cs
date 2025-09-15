@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.UI.Controllers;
 
 namespace Voodoo.Scripts.GameSystems.Utilities
 {
     public sealed class PiecePool : IPiecePool, IDisposable
     {
         private Transform _inactiveRoot;
-        private readonly Dictionary<PieceTypeDefinition, Stack<GamePieceView>> _free = new();
+        private readonly Dictionary<PieceTypeDefinition, Stack<GamePiecePresenter>> _free = new();
         private readonly Dictionary<PieceTypeDefinition, GameObject> _prefabs = new();
 
         public void Initialize(Dictionary<PieceTypeDefinition, GameObject> availablePrefabsMap, Dictionary<PieceTypeDefinition, int> preloadCounts)
@@ -29,63 +30,58 @@ namespace Voodoo.Scripts.GameSystems.Utilities
             {
                 PieceTypeDefinition type = kv.Key;
                 int count = Mathf.Max(0, kv.Value);
-                if (!_free.ContainsKey(type)) _free[type] = new Stack<GamePieceView>(count);
+                if (!_free.ContainsKey(type)) _free[type] = new Stack<GamePiecePresenter>(count);
 
                 GameObject prefab = _prefabs[type];
                 for (int i = 0; i < count; i++)
-                {
-                    GameObject go = UnityEngine.Object.Instantiate(prefab, _inactiveRoot);
-                    go.SetActive(false);
-
-                    GamePieceView view = go.GetComponent<GamePieceView>() ?? go.AddComponent<GamePieceView>();
-                    view.Bind(type);
-                    _free[type].Push(view);
+                {  
+                    GameObject viewGo = UnityEngine.Object.Instantiate(prefab, _inactiveRoot);
+                    GamePieceView view = viewGo.GetComponent<GamePieceView>() ?? viewGo.AddComponent<GamePieceView>();
+                    GamePiecePresenter presenter = new GamePiecePresenter(view, type);
+                    _free[type].Push(presenter);
                 }
             }
         }
 
-        public GamePieceView Get(PieceTypeDefinition type)
+        public GamePiecePresenter Get(PieceTypeDefinition type)
         {
             if (!_prefabs.ContainsKey(type))
                 throw new InvalidOperationException($"No prefab registered for '{type?.id}'.");
 
             if (!_free.TryGetValue(type, out var stack))
             {
-                stack = new Stack<GamePieceView>();
+                stack = new Stack<GamePiecePresenter>();
                 _free[type] = stack;
             }
 
-            GamePieceView view;
+            GamePiecePresenter presenter;
             if (stack.Count > 0)
             {
-                view = stack.Pop();
+                presenter = stack.Pop();
             }
             else
             {
                 // pool is emtpy -> create extra from provided prefab
-                var go = UnityEngine.Object.Instantiate(_prefabs[type]);
-                view = go.GetComponent<GamePieceView>() ?? go.AddComponent<GamePieceView>();
-                view.Bind(type);
+                GameObject viewGo = UnityEngine.Object.Instantiate(_prefabs[type]);
+                GamePieceView view = viewGo.GetComponent<GamePieceView>() ?? viewGo.AddComponent<GamePieceView>();
+                presenter = new GamePiecePresenter(view, type);
             }
 
-            view.gameObject.SetActive(true);
-            return view;
+            return presenter;
         }
 
-        public void Release(GamePieceView view)
+        public void Release(GamePiecePresenter presenter)
         {
-            if (view == null || view.TypeDef == null) return;
+            if (presenter == null || presenter.TypeDef == null) return;
 
-            if (!_free.TryGetValue(view.TypeDef, out var stack))
+            if (!_free.TryGetValue(presenter.TypeDef, out var stack))
             {
-                stack = new Stack<GamePieceView>();
-                _free[view.TypeDef] = stack;
+                stack = new Stack<GamePiecePresenter>();
+                _free[presenter.TypeDef] = stack;
             }
-
-            Transform t = view.transform;
-            t.SetParent(_inactiveRoot, false);
-            view.gameObject.SetActive(false);
-            stack.Push(view);
+            
+            presenter.Release(_inactiveRoot);
+            stack.Push(presenter);
         }
 
         public void Dispose()
@@ -94,10 +90,10 @@ namespace Voodoo.Scripts.GameSystems.Utilities
             {
                 while (stack.Count > 0)
                 {
-                    GamePieceView view = stack.Pop();
-                    if (view)
+                    GamePiecePresenter presenter = stack.Pop();
+                    if (presenter != null)
                     {
-                        UnityEngine.Object.Destroy(view.gameObject);
+                        presenter.Dispose();
                     }
                 }
             }

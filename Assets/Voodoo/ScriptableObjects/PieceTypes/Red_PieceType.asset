@@ -18,4 +18,7 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  displayColor: {r: 1, g: 0, b: 0, a: 1}
+  pieceType:
+    Role: 0
+    SpawnWeight: 100
+    AllowRandomSpawn: 1

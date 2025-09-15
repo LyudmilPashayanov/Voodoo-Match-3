@@ -31,7 +31,7 @@ namespace Voodoo.UI.Controllers
             _boardPresenter.InitializeBoard(gridWidth, gridHeight);
             
             _gameFlow.PieceSpawned += _boardPresenter.SpawnPiece;
-            _gameFlow.PiecesCleared += _boardPresenter.ClearPiece;
+            _gameFlow.PiecesCleared += _boardPresenter.ClearPieces;
             
             _view.HideLoading();
         }

@@ -1,16 +1,14 @@
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using Voodoo.Scripts.UI.Views.Gameplay;
 
 public class BoardView : MonoBehaviour
 {
-
     [SerializeField] private RectTransform _boardTransform;
+    [SerializeField] private RectTransform _arrowsMoveOverlay;
+    [SerializeField] private List<RectTransform> _arrowsTransform;
 
     private float _spriteSize;
-    private readonly Dictionary<int, GamePieceView> _activePieces = new Dictionary<int, GamePieceView>();
     private int _boardWidth;
     private Vector2 _origin;
 
@@ -18,35 +16,25 @@ public class BoardView : MonoBehaviour
     {
         _boardWidth = gridWidth;
         _boardTransform.GetComponent<RawImage>().uvRect = new Rect(0, 0, gridWidth, gridHeight);
-        CalculateSpriteSize(gridWidth);
+        _spriteSize = _boardTransform.rect.width / _boardWidth;
+        _arrowsMoveOverlay.sizeDelta = new Vector2(_spriteSize,_spriteSize);
+        foreach (RectTransform arrow in _arrowsTransform)
+        {
+            arrow.sizeDelta = new Vector2(_spriteSize/2, _spriteSize/2);
+        }
         
         _origin = new Vector2(
             -(_boardWidth - 1) * (_spriteSize + 0) * 0.5f,
             -(_boardWidth - 1) * (_spriteSize + 0) * 0.5f
         );
     }
-    
-    public void ClearPieces(int[] indices)
+
+    public Transform GetBoardTransform()
     {
-        foreach (var idx in indices)
-        {
-            if (!_activePieces.TryGetValue(idx, out var piece)) continue;
-            piece.transform.DOScale(Vector3.zero, 0.3f);
-                //.OnComplete(() => PiecePool.Instance.Release(piece));
-            _activePieces.Remove(idx);
-        }
+        return _boardTransform;
     }
     
-    public void PlacePiece(GamePieceView piece, int index)
-    {
-        _activePieces.Add(index, piece);
-        piece.gameObject.name = index.ToString();
-        piece.SetSize(_spriteSize);
-        piece.transform.SetParent(_boardTransform, false);
-        piece.transform.localPosition = GetCellLocalPosition(index);
-    }
-    
-    private Vector2 GetCellLocalPosition(int index)
+    public Vector2 GetBoardPositionBasedOnIndex(int index)
     {
         int x = index % _boardWidth;
         int y = index / _boardWidth;
@@ -59,9 +47,32 @@ public class BoardView : MonoBehaviour
 
     }
     
-    private void CalculateSpriteSize(int gridWidth)
+    public Vector2 aGetBoardPositionBasedOnIndex(int index)
     {
-        _spriteSize = _boardTransform.rect.width / gridWidth;
+        int x = index % _boardWidth;
+        int y = index / _boardWidth;
+
+        float cell = _spriteSize + 0;
+        float posX = x * cell;
+        float posY = y * cell;
+
+        return new Vector2(posX, posY);
+
+    }
+    
+    public float GetSpriteSize()
+    {
+        return _spriteSize;
+    }
+
+    public void SetArrowOverlayPosition(int index)
+    {
+        _arrowsMoveOverlay.anchoredPosition = aGetBoardPositionBasedOnIndex(index);
+    }
+
+    public void EnableArrowOverlay(bool enable)
+    {
+        _arrowsMoveOverlay.gameObject.SetActive(enable);
     }
 
 }

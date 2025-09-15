@@ -1,10 +1,10 @@
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.UI.Controllers;
 
 namespace Voodoo.Scripts.GameSystems.Utilities
 {
     public interface IPiecePool
     {
-        GamePieceView Get(PieceTypeDefinition def);
-        void Release(GamePieceView view);
+        GamePiecePresenter Get(PieceTypeDefinition def);
+        void Release(GamePiecePresenter presenter);
     }
 }

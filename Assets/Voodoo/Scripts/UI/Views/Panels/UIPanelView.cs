@@ -25,6 +25,7 @@ namespace Voodoo.UI.Panels
         protected void Awake()
         {
             _canvasGroup.alpha = 0f;
+            gameObject.SetActive(false);
         }
 
         protected void OnDestroy()
