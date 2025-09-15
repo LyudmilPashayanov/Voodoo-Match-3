@@ -71,7 +71,6 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         public void OnPointerClick(PointerEventData eventData)
         {
             OnClicked?.Invoke();
-            Debug.Log("clicked!!!");
         }
 
         public void OnBeginDrag(PointerEventData eventData)

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using Voodoo.Scripts.GameSystems.Utilities;
@@ -16,12 +18,13 @@ namespace Voodoo.Gameplay
         void Resume();
 
         // Events (pure data, no Unity types)
-        event System.Action<int, PieceTypeDefinition> PieceSpawned;
-        event System.Action<int[]> PiecesCleared;
-        event System.Action<int, int> PieceMoved;         // from -> to
-        event System.Action<int> ScoreChanged;
-        event System.Action<int> TimeChanged;             // seconds remaining
-        event System.Action GameOver;
-        event System.Action<int, int> GameLoaded;   // width, height (optional)
+        event Action<int, PieceTypeDefinition> PieceSpawned;
+        event Action<int[]> PiecesCleared;
+        event Action<int, int> PiecesSwapped;         // from -> to
+        event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
+        event Action<int> ScoreChanged;
+        event Action<int> TimeChanged;             // seconds remaining
+        event Action GameOver;
+        event Action<int, int> GameLoaded;   // width, height (optional)
     }
 }

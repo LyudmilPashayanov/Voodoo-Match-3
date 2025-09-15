@@ -29,7 +29,8 @@ namespace Voodoo.Gameplay
 
         public event Action<int, PieceTypeDefinition> PieceSpawned;
         public event Action<int[]> PiecesCleared;
-        public event Action<int, int> PieceMoved;
+        public event Action<int, int> PiecesSwapped;
+        public event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
         public event Action<int> ScoreChanged;
         public event Action<int> TimeChanged;
         public event Action GameOver;
@@ -181,25 +182,56 @@ namespace Voodoo.Gameplay
             
             PieceSpawned?.Invoke(cellIndex, _availableTypes[typeId]);
         }
+        private void OnModelPiecesCleared(int[] indices)
+        {
+            PiecesCleared?.Invoke(indices);
+        }
+
+        private void OnModelSwapped(int from, int to)
+        {
+            PiecesSwapped?.Invoke(from, to);
+        }
+        
+        private void OnGravityMoves(IReadOnlyList<(int from, int to)> ListOfMoves)
+        {
+            GravityMoves?.Invoke(ListOfMoves);
+        }
+        
+        private void OnModelScoreUpdated(int score)
+        {
+            ScoreChanged?.Invoke(score);
+        }
+
+        private void OnModelTimeChanged(int time)
+        {
+            TimeChanged?.Invoke(time);
+        }
+
+        private void OnModelGameOver()
+        {
+            GameOver?.Invoke();
+        }
         
         private void WireModelEvents(GameManager gm)
         {
             gm.OnPieceSpawn += OnModelPieceSpawned;
-            gm.OnPiecesClear += PiecesCleared;
-            gm.OnPieceMoved += PieceMoved;
-            gm.OnScoreUpdated += ScoreChanged;
-            gm.OnTimeChanged += TimeChanged;
-            gm.OnGameOver += GameOver;
+            gm.OnPiecesClear += OnModelPiecesCleared;
+            gm.OnSwapCommitted += OnModelSwapped;
+            gm.OnGravityMoves += OnGravityMoves;
+            gm.OnScoreUpdated += OnModelScoreUpdated;
+            gm.OnTimeChanged += OnModelTimeChanged;
+            gm.OnGameOver += OnModelGameOver;
         }
 
         private void UnwireModelEvents(GameManager gm)
         {
             gm.OnPieceSpawn -= OnModelPieceSpawned;
-            gm.OnPiecesClear -= PiecesCleared;
-            gm.OnPieceMoved -= PieceMoved;
-            gm.OnScoreUpdated -= ScoreChanged;
-            gm.OnTimeChanged -= TimeChanged;
-            gm.OnGameOver -= GameOver;
+            gm.OnPiecesClear -= OnModelPiecesCleared;
+            gm.OnSwapCommitted -= OnModelSwapped;
+            gm.OnGravityMoves -= OnGravityMoves;
+            gm.OnScoreUpdated -= OnModelScoreUpdated;
+            gm.OnTimeChanged -= OnModelTimeChanged;
+            gm.OnGameOver -= OnModelGameOver;
         }
         
         public void RequestSwap(int fromIndex, int toIndex)

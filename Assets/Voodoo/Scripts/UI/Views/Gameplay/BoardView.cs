@@ -47,19 +47,6 @@ public class BoardView : MonoBehaviour
 
     }
     
-    public Vector2 aGetBoardPositionBasedOnIndex(int index)
-    {
-        int x = index % _boardWidth;
-        int y = index / _boardWidth;
-
-        float cell = _spriteSize + 0;
-        float posX = x * cell;
-        float posY = y * cell;
-
-        return new Vector2(posX, posY);
-
-    }
-    
     public float GetSpriteSize()
     {
         return _spriteSize;
@@ -67,7 +54,7 @@ public class BoardView : MonoBehaviour
 
     public void SetArrowOverlayPosition(int index)
     {
-        _arrowsMoveOverlay.anchoredPosition = aGetBoardPositionBasedOnIndex(index);
+        _arrowsMoveOverlay.transform.localPosition = GetBoardPositionBasedOnIndex(index);
     }
 
     public void EnableArrowOverlay(bool enable)

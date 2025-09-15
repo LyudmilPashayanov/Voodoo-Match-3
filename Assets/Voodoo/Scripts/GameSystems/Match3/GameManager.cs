@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Match3;
 
@@ -10,7 +9,9 @@ namespace Voodoo.Gameplay
     {
         public event Action<int, int> OnPieceSpawn;
         public event Action<int[]> OnPiecesClear;
-        public event Action<int, int> OnPieceMoved;
+        public event Action<int, int> OnSwapCommitted; 
+        public event Action<IReadOnlyList<(int from, int to)>> OnGravityMoves; 
+
         public event Action<int> OnScoreUpdated;
         public event Action OnGameOver;
         public event Action<int> OnTimeChanged;
@@ -37,19 +38,24 @@ namespace Voodoo.Gameplay
         
         public void RequestSwap(int a, int b)
         {
-            if (!Grid.AreAdjacent(a, b, _grid.Width)) return;
+            if (!Grid.AreAdjacent(a, b, _grid.Width))
+            {
+                // TODO: Event wrong move -  not even adjacent
+                return;
+            }
 
             _grid.Swap(a, b);
 
             var matches = Matcher.FindAllMatches(_grid);
             if (matches.Count == 0)
             {
-                _grid.Swap(a, b); // revert
+                _grid.Swap(a, b); 
+                
+                // TODO: Event wrong move -  not a match
                 return;
             }
 
-            OnPieceMoved?.Invoke(a, b);
-            OnPieceMoved?.Invoke(b, a);
+            OnSwapCommitted?.Invoke(a,b);
 
             ResolveCascades();
         }
@@ -121,9 +127,11 @@ namespace Voodoo.Gameplay
                     // _score.AddClear(size, largestRun, cascade);
                 }
 
-                var moves = Gravity.Collapse(_grid);
-                foreach (var (from, to) in moves)
-                    OnPieceMoved?.Invoke(from, to);
+                List<(int from, int to)> moves = Gravity.Collapse(_grid);
+                if (moves.Count > 0)
+                {
+                    OnGravityMoves?.Invoke(moves);
+                }
 
                 FillGrid();
                 cascade++;

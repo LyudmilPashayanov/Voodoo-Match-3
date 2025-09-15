@@ -32,6 +32,9 @@ namespace Voodoo.UI.Controllers
             
             _gameFlow.PieceSpawned += _boardPresenter.SpawnPiece;
             _gameFlow.PiecesCleared += _boardPresenter.ClearPieces;
+            _gameFlow.PiecesSwapped += _boardPresenter.OnSwapCommitted;
+            _gameFlow.GravityMoves += _boardPresenter.OnGravityMoves;
+            _boardPresenter.SwapPieces += _gameFlow.RequestSwap;
             
             _view.HideLoading();
         }
