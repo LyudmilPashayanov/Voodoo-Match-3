@@ -22,11 +22,22 @@ namespace Voodoo.Gameplay
             Array.Fill(Tiles, (sbyte)-1);
         }
 
-        public int GetIndexAt(int x, int y) => y * Width + x;
-        public static bool AreAdjacent(int a, int b, int w)
+        public int GetIndexAt(int x, int y)
         {
-            int ax=a%w, ay=a/w, bx=b%w, by=b/w;
-            return Math.Abs(ax-bx)+Math.Abs(ay-by)==1;
+            return y * Width + x;
+        } 
+        
+        public void GetCoordsAt(int index, out int x, out int y)
+        {
+            x = index % Width;
+            y = index / Width;
+        }
+        
+        public static bool AreAdjacent(int a, int b, int width)
+        {
+            int ax = a % width, ay = a / width;
+            int bx = b % width, by = b / width;
+            return Math.Abs(ax - bx) + Math.Abs(ay - by) == 1;
         }
 
         public void Swap(int a, int b)

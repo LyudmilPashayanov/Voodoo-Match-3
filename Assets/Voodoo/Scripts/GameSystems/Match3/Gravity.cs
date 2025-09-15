@@ -5,25 +5,29 @@ namespace Voodoo.Scripts.GameSystems.Match3
 {
     public static class Gravity
     {
-        public static List<(int from,int to)> Collapse(Grid g)
+        public static List<(int from,int to)> Collapse(Grid grid)
         {
-            var moves = new List<(int,int)>(g.Count/3);
-            int w=g.Width, h=g.Height;
-            for (int x=0;x<w;x++)
+            var moves = new List<(int,int)>(grid.Count/3);
+            int w = grid.Width;
+            int h = grid.Height;
+            for (int x = 0; x < w; x++)
             {
-                int write = w*(h-1) + x;            // bottom index
-                for (int y=h-1;y>=0;y--)
+                int writeY = 0; // bottom row
+                for (int y = 0; y < h; y++) // scan from bottom to top
                 {
-                    int read = y*w + x;
-                    if (g.Tiles[read] >= 0)
+                    int readIndex = grid.GetIndexAt(x, y);
+                    sbyte tile = grid.Tiles[readIndex];
+
+                    if (tile >= 0)
                     {
-                        if (read != write)
+                        int writeIndex = grid.GetIndexAt(x, writeY);
+                        if (readIndex != writeIndex)
                         {
-                            g.Tiles[write] = g.Tiles[read];
-                            g.Tiles[read] = -1;
-                            moves.Add((read, write));
+                            grid.Tiles[writeIndex] = tile;
+                            grid.Tiles[readIndex] = -1;
+                            moves.Add((readIndex, writeIndex));
                         }
-                        write -= w;
+                        writeY++;
                     }
                 }
             }

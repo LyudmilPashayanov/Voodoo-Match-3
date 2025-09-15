@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using Voodoo.Scripts.GameSystems.Utilities;
 using Voodoo.Scripts.UI.Views.Gameplay;
 
 public class BoardView : MonoBehaviour
@@ -53,14 +51,12 @@ public class BoardView : MonoBehaviour
         int x = index % _boardWidth;
         int y = index / _boardWidth;
 
-        // Flip Y so model row 0 (top) renders at the bottom
-        int flippedY = (_boardWidth - 1) - y;
-
-        float cell = _spriteSize + 0;   // make spacing a float
+        float cell = _spriteSize + 0;
         float posX = x * cell;
-        float posY = flippedY * cell;
+        float posY = y * cell;
 
-        return _origin + new Vector2(posX, posY);        // local to the board root
+        return _origin + new Vector2(posX, posY);
+
     }
     
     private void CalculateSpriteSize(int gridWidth)
