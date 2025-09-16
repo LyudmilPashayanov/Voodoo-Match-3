@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Match3;
 
@@ -7,10 +9,10 @@ namespace Voodoo.Gameplay
 {
     public class GameManager
     {
-        public event Action<int, int> OnPieceSpawn;
-        public event Action<int[]> OnPiecesClear;
-        public event Action<int, int> OnSwapCommitted; 
-        public event Action<IReadOnlyList<(int from, int to)>> OnGravityMoves; 
+        public Func<int, int, UniTask> OnPieceSpawnAsync { get; set; }
+        public Func<IReadOnlyList<MatchCluster>,UniTask> OnPiecesClearAsync { get; set; }
+        public Func<int, int, UniTask> OnSwapCommittedAsync { get; set; }
+        public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // public event Action<IReadOnlyList<(int from, int to)>> OnGravityMoves; 
 
         public event Action<int> OnScoreUpdated;
         public event Action OnGameOver;
@@ -33,11 +35,11 @@ namespace Voodoo.Gameplay
         public void StartGame()
         {
             FillGrid();
-            ResolveCascades();
+            ResolveCascadesAsync();
             OnScoreUpdated?.Invoke(999);
         }
         
-        public void ClickPiece(int indexClicked)
+        public async UniTask ClickPiece(int indexClicked)
         {
             if (_currentClickedIndex == -1) // first click
             {
@@ -71,9 +73,8 @@ namespace Voodoo.Gameplay
                     return;
                 }
                 
-                OnSwapCommitted?.Invoke(previousClickedIndex, _currentClickedIndex);
-                ResolveCascades();
-
+                await OnSwapCommittedAsync(previousClickedIndex, _currentClickedIndex);
+                await ResolveCascadesAsync();
             }
         }
 
@@ -92,8 +93,10 @@ namespace Voodoo.Gameplay
             // Pausing the timer and game flow.
         }
         
-        private void FillGrid()
+        private async UniTask FillGrid()
         {
+            var tasks = new List<UniTask>();
+
             for (int y = 0; y < _grid.Height; y++)
             {
                 for (int x = 0; x < _grid.Width; x++)
@@ -104,21 +107,24 @@ namespace Voodoo.Gameplay
                         int typeIdToSpawn = _spawner.PickPieceWithFilter(_rng,
                             t => !Matcher.IsResultingInMatch(_grid, indexToFill, t));
                         _grid.Tiles[indexToFill] = (sbyte)typeIdToSpawn;
-                        OnPieceSpawn?.Invoke(indexToFill, typeIdToSpawn);
+                        
+                        tasks.Add(OnPieceSpawnAsync(indexToFill, typeIdToSpawn));
                     }
                 }
             }
+            
+            await UniTask.WhenAll(tasks);
         }
 
-        private void ResolveCascades()
+        private async UniTask ResolveCascadesAsync(CancellationToken ct = default)
         {
             int cascade = 0;
             bool hasMatches = true;
 
             while (hasMatches)
             {
-                var clusters = Matcher.FindAllMatches(_grid);
-                if (clusters.Count == 0)
+                IReadOnlyList<MatchCluster> clustersToDestroy = Matcher.FindAllMatches(_grid);
+                if (clustersToDestroy.Count == 0)
                 {
                     hasMatches = false; // exit loop
                     continue;
@@ -126,7 +132,7 @@ namespace Voodoo.Gameplay
 
                 // collect all cleared indices
                 var allCleared = new List<int>();
-                foreach (var cluster in clusters)
+                foreach (var cluster in clustersToDestroy)
                     allCleared.AddRange(cluster.Indices);
 
                 allCleared.Sort();
@@ -134,10 +140,10 @@ namespace Voodoo.Gameplay
                 foreach (int idx in allCleared)
                     _grid.ClearAtIndex(idx);
 
-                OnPiecesClear?.Invoke(allCleared.ToArray());
+                await OnPiecesClearAsync(clustersToDestroy);
 
                 // scoring
-                foreach (var cluster in clusters)
+                foreach (var cluster in clustersToDestroy)
                 {
                     int size = cluster.Indices.Count;
                     int largestRun = size >= 5 ? 5 : size >= 4 ? 4 : 3;
@@ -147,10 +153,10 @@ namespace Voodoo.Gameplay
                 List<(int from, int to)> moves = Gravity.Collapse(_grid);
                 if (moves.Count > 0)
                 {
-                    OnGravityMoves?.Invoke(moves);
+                   await OnGravityMovesAsync(moves);
                 }
 
-                FillGrid();
+               await FillGrid();
                 cascade++;
             }
         }

@@ -80,7 +80,7 @@ namespace Voodoo.Scripts.GameSystems.Utilities
                 _free[presenter.TypeDef] = stack;
             }
             
-            presenter.Release(_inactiveRoot);
+            presenter.ReleaseAndReset(_inactiveRoot);
             stack.Push(presenter);
         }
 

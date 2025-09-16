@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Scripts.GameSystems.Utilities;
 using Voodoo.Scripts.UI.Views.Gameplay;
@@ -23,16 +24,30 @@ namespace Voodoo.UI.Controllers
             View.OnSwiped += PieceSwiped;
         }
 
-        public void PlacePiece(Transform parent, Vector2 localLocation, int index)
+        public void SetIndex(int index)
         {
-            View.SetParentAndPosition(parent, localLocation);
-            View.Enable(true);
             _index = index;
-        } 
+        }
         
-        public void AnimatePiece(float fromLocation, float toLocation)
+        public void SetPosition(Vector2 localLocation)
         {
-            
+            View.SetPosition(localLocation);
+            View.Enable(true); 
+        } 
+        public void SetParent(Transform parent)
+        {
+            View.SetParent(parent);
+        }
+
+        public async UniTask SpawnAnimation(Vector2 spawnLocation, Vector2 toLocation)
+        {
+            SetPosition(spawnLocation);
+            await AnimatePiece(toLocation);
+        }
+        
+        public async UniTask AnimatePiece(Vector2 toLocation)
+        {
+           await View.AnimatePiece(toLocation);
         }
 
         public void SetPieceSize(float pieceSize)
@@ -68,23 +83,23 @@ namespace Voodoo.UI.Controllers
             }
         }
 
-        public void Destroy(/*destroy type of animation based on the matchChunk found*/)
+        public async UniTask DestroyAnimationAsync()
         {
-            View.Enable(false);
+            await View.DestroyAnimationAsync();
             // Play destroyed animation
         }
         
-        public void Release(Transform newParent)
+        public void ReleaseAndReset(Transform newParent)
         {
-            View.Enable(false);
-            View.SetParentAndPosition(newParent, Vector3.zero);
+            View.SetParent(newParent);
+            View.ResetState();
         }
 
         public void Dispose()
         {
             View.OnClicked -= PieceClicked;
            // View.OnSwiped -= PieceSwiped; // if you have swipes too
-            View.Destroy();
+            View.DestroyObject();
             TypeDef = null;
         }
 

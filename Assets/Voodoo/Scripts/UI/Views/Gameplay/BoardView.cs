@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class BoardView : MonoBehaviour
 {
     [SerializeField] private RectTransform _boardTransform;
+    [SerializeField] private RectTransform _inputBlocker;
     [SerializeField] private RectTransform _arrowsMoveOverlay;
     [SerializeField] private List<RectTransform> _arrowsTransform;
 
@@ -29,6 +30,11 @@ public class BoardView : MonoBehaviour
         );
     }
 
+    public void BlockInput(bool enable)
+    {
+        _inputBlocker.gameObject.SetActive(enable);
+    }
+    
     public Transform GetBoardTransform()
     {
         return _boardTransform;

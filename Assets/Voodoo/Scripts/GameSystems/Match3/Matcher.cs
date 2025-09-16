@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using Grid = Voodoo.Gameplay.Grid;
 
 namespace Voodoo.Scripts.GameSystems
@@ -12,7 +11,7 @@ namespace Voodoo.Scripts.GameSystems
     
     public static class Matcher
     {
-        public static List<MatchCluster> FindAllMatches(Grid grid, bool exitEarly = false)
+        public static IReadOnlyList<MatchCluster> FindAllMatches(Grid grid, bool exitEarly = false)
         {
             List<MatchCluster> clusters = new List<MatchCluster>();
             int w = grid.Width;

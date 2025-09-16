@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Voodoo.ConfigScriptableObjects;
+using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
@@ -27,10 +28,10 @@ namespace Voodoo.Gameplay
 
         public bool IsPrepared { get; private set; }
 
-        public event Action<int, PieceTypeDefinition> PieceSpawned;
-        public event Action<int[]> PiecesCleared;
-        public event Action<int, int> PiecesSwapped;
-        public event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
+        public Func<int, PieceTypeDefinition, UniTask> PieceSpawnAsync { get; set; } // public event Action<int, PieceTypeDefinition> PieceSpawned;
+        public Func<IReadOnlyList<MatchCluster>,UniTask> PiecesClearAsync { get; set; } // public event Action<int[]> PiecesCleared;
+        public Func<int, int, UniTask> PieceSwapAsync { get; set; }// public event Action<int, int> PiecesSwapped;
+        public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
         public event Action<int> ScoreChanged;
         public event Action<int> TimeChanged;
         public event Action GameOver;
@@ -173,27 +174,28 @@ namespace Voodoo.Gameplay
         /// </summary>
         /// <param name="cellIndex"></param>
         /// <param name="typeId"></param>
-        private void OnModelPieceSpawned(int cellIndex, int typeId)
+        private async UniTask OnModelPieceSpawnedAsync(int cellIndex, int typeId)
         {
             if ((uint)typeId >= (uint)_availableTypes.Length)
+            {
                 return;
+            }
             
-            
-            PieceSpawned?.Invoke(cellIndex, _availableTypes[typeId]);
+            await PieceSpawnAsync(cellIndex, _availableTypes[typeId]);
         }
-        private void OnModelPiecesCleared(int[] indices)
+        private async UniTask OnModelPiecesClearedAsync(IReadOnlyList<MatchCluster> clusterToClear)
         {
-            PiecesCleared?.Invoke(indices);
+            await PiecesClearAsync(clusterToClear);
         }
 
-        private void OnModelSwapped(int from, int to)
+        private async UniTask OnModelSwappedAsync(int from, int to)
         {
-            PiecesSwapped?.Invoke(from, to);
+            await PieceSwapAsync(from, to);
         }
         
-        private void OnGravityMoves(IReadOnlyList<(int from, int to)> ListOfMoves)
+        private async UniTask GravityMovesAsync(IReadOnlyList<(int from, int to)> listOfMoves)
         {
-            GravityMoves?.Invoke(ListOfMoves);
+            await OnGravityMovesAsync(listOfMoves);
         }
         
         private void OnModelScoreUpdated(int score)
@@ -213,10 +215,10 @@ namespace Voodoo.Gameplay
         
         private void WireModelEvents(GameManager gm)
         {
-            gm.OnPieceSpawn += OnModelPieceSpawned;
-            gm.OnPiecesClear += OnModelPiecesCleared;
-            gm.OnSwapCommitted += OnModelSwapped;
-            gm.OnGravityMoves += OnGravityMoves;
+            gm.OnPieceSpawnAsync = OnModelPieceSpawnedAsync;
+            gm.OnPiecesClearAsync = OnModelPiecesClearedAsync;
+            gm.OnSwapCommittedAsync = OnModelSwappedAsync;
+            gm.OnGravityMovesAsync = GravityMovesAsync;
             gm.OnScoreUpdated += OnModelScoreUpdated;
             gm.OnTimeChanged += OnModelTimeChanged;
             gm.OnGameOver += OnModelGameOver;
@@ -224,10 +226,10 @@ namespace Voodoo.Gameplay
 
         private void UnwireModelEvents(GameManager gm)
         {
-            gm.OnPieceSpawn -= OnModelPieceSpawned;
-            gm.OnPiecesClear -= OnModelPiecesCleared;
-            gm.OnSwapCommitted -= OnModelSwapped;
-            gm.OnGravityMoves -= OnGravityMoves;
+            gm.OnPieceSpawnAsync = null;
+            gm.OnPiecesClearAsync = null;
+            gm.OnSwapCommittedAsync = null;
+            gm.OnGravityMovesAsync = null;
             gm.OnScoreUpdated -= OnModelScoreUpdated;
             gm.OnTimeChanged -= OnModelTimeChanged;
             gm.OnGameOver -= OnModelGameOver;

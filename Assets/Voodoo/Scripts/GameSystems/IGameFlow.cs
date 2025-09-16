@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
@@ -18,10 +19,10 @@ namespace Voodoo.Gameplay
         void Resume();
 
         // Events (pure data, no Unity types)
-        event Action<int, PieceTypeDefinition> PieceSpawned;
-        event Action<int[]> PiecesCleared;
-        event Action<int, int> PiecesSwapped;         // from -> to
-        event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
+        Func<int, PieceTypeDefinition,UniTask> PieceSpawnAsync { get; set; } //event Action<int, PieceTypeDefinition> PieceSpawned;
+        Func<IReadOnlyList<MatchCluster>, UniTask> PiecesClearAsync  { get; set; }
+        Func<int,int,UniTask> PieceSwapAsync { get; set; }         // from -> to
+        Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
         event Action<int> ScoreChanged;
         event Action<int> TimeChanged;             // seconds remaining
         event Action GameOver;

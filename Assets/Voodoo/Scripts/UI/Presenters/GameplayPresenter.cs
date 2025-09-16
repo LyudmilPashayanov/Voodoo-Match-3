@@ -30,10 +30,10 @@ namespace Voodoo.UI.Controllers
             
             _boardPresenter.InitializeBoard(gridWidth, gridHeight);
             
-            _gameFlow.PieceSpawned += _boardPresenter.SpawnPiece;
-            _gameFlow.PiecesCleared += _boardPresenter.ClearPieces;
-            _gameFlow.PiecesSwapped += _boardPresenter.OnSwapCommitted;
-            _gameFlow.GravityMoves += _boardPresenter.OnGravityMoves;
+            _gameFlow.PieceSpawnAsync = _boardPresenter.SpawnPieceAsync;
+            _gameFlow.PiecesClearAsync = _boardPresenter.ClearPiecesAsync;
+            _gameFlow.PieceSwapAsync = _boardPresenter.OnSwapCommittedAsync;
+            _gameFlow.OnGravityMovesAsync = _boardPresenter.OnGravityMovesAsync;
             _boardPresenter.ClickPiece += _gameFlow.PieceClicked;
             
             _view.HideLoading();

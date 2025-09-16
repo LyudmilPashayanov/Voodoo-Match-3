@@ -1,4 +1,6 @@
 using System;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Voodoo.Scripts.GameSystems.Utilities;
@@ -9,14 +11,17 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
     {
         void Bind(PieceTypeDefinition type);
         void SetSize(float size);
-        void SetParentAndPosition(Transform parent, Vector2 localPosition);
+        void SetPosition(Vector2 localPosition);
+        void SetParent(Transform parent);
         void SetName(string name);
         void Enable(bool enable);
-        void Destroy();
-        
+        UniTask DestroyAnimationAsync();
         event Action OnClicked;
         event Action<SwipeDirection> OnSwiped;
         void EnableClickedState(bool enable);
+        UniTask AnimatePiece(Vector2 toLocation);
+        void DestroyObject();
+        void ResetState();
     }
     
     public class GamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler, IEndDragHandler
@@ -34,6 +39,14 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
            // start animation
         }
 
+        public UniTask AnimatePiece(Vector2 toLocation)
+        {
+            return _pieceTransform
+                .DOLocalMove(toLocation, 1f)
+                .SetEase(Ease.InOutQuad)
+                .ToUniTask();
+        }
+        
         public void Bind(PieceTypeDefinition typeDefinition)
         {
             TypeDef = typeDefinition;
@@ -44,14 +57,28 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
             gameObject.SetActive(enable);
         }
 
-        public void Destroy()
+        public UniTask DestroyAnimationAsync()
         {
-            Destroy(gameObject);
+            return _pieceTransform
+                .DOScale(Vector2.zero, 1f)
+                .SetEase(Ease.InOutQuad)
+                .ToUniTask(); 
         }
-
-        public void SetParentAndPosition(Transform parent, Vector2 localPosition)
+        
+        public void ResetState()
+        {
+            // reset animation states.
+            Enable(true);
+            _pieceTransform.localScale = Vector3.one;
+        }
+        
+        public void SetParent(Transform parent)
         {
             transform.SetParent(parent, false);
+        }
+        
+        public void SetPosition(Vector2 localPosition)
+        {
             transform.localPosition = localPosition;
         }
 
@@ -67,6 +94,13 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
             _pieceTransform.anchorMin = Vector2.zero;
             _pieceTransform.anchorMax = Vector2.zero;
         }
+        
+        public void DestroyObject()
+        {
+            Destroy(gameObject);
+        }
+
+        #region EventHandlers
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -92,5 +126,6 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
                 OnSwiped?.Invoke(delta.y > 0 ? SwipeDirection.Up : SwipeDirection.Down);
             }
         }
+        #endregion
     }
 }
