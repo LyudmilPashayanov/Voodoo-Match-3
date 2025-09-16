@@ -37,6 +37,7 @@ namespace Voodoo.UI.Controllers
             _gameFlow.InvalidMoveAsync = _boardPresenter.OnInvalidMoveAsync;
             _gameFlow.OnGravityMovesAsync = _boardPresenter.OnGravityMovesAsync;
             _boardPresenter.ClickPiece += _gameFlow.PieceClicked;
+            _boardPresenter.SwapPiece += _gameFlow.SwapPiece;
             
             _view.HideLoading();
         }

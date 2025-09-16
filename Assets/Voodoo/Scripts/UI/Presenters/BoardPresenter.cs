@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.Scripts.UI.Views.Gameplay;
 
 namespace Voodoo.UI.Controllers
 {
@@ -16,6 +17,7 @@ namespace Voodoo.UI.Controllers
 
         private int _currentClickedIndex = -1;
         public event Action<int> ClickPiece;
+        public event Action<int, SwipeDirection> SwapPiece;
         
         public BoardPresenter(BoardView view, IPiecePool pool)
         {
@@ -56,7 +58,7 @@ namespace Voodoo.UI.Controllers
             }
         }
 
-        private void ResetArrowsOverlay()
+        private void ResetClickState()
         {
             _currentClickedIndex = -1;
             _view.EnableArrowOverlay(false);
@@ -64,22 +66,13 @@ namespace Voodoo.UI.Controllers
 
         private void PieceSwiped(int indexSwiped, SwipeDirection direction)
         {
-          //  if (indexClicked == _currentClickedIndex)
-          //  {
-          //      _currentClickedIndex = -1;
-          //      _view.EnableArrowOverlay(false);
-          //  }
-          //  else
-          //  {
-          //      _currentClickedIndex = indexClicked;
-          //      _view.SetArrowOverlayPosition(indexClicked);
-          //      _view.EnableArrowOverlay(true);
-          //  }
+            ResetClickState();
+            SwapPiece?.Invoke(indexSwiped, direction);
         }
 
         private async UniTask ClearPiece(GamePiecePresenter piecePresenter)
         {
-            ResetArrowsOverlay();
+            ResetClickState();
             await piecePresenter.DestroyAnimationAsync();
             _pool.Release(piecePresenter);
             piecePresenter.Clicked -= PieceClicked;
@@ -113,7 +106,7 @@ namespace Voodoo.UI.Controllers
         public async UniTask ClearPiecesAsync(IReadOnlyList<MatchCluster> matchesToClear)
         {
             _view.BlockInput(true);
-            ResetArrowsOverlay();
+            ResetClickState();
             foreach (MatchCluster cluster in matchesToClear)
             {
                 var tasks = new List<UniTask>();
@@ -132,7 +125,7 @@ namespace Voodoo.UI.Controllers
         public async UniTask OnSwapCommittedAsync(int fromIndex, int toIndex)
         {
             _view.BlockInput(true);
-            ResetArrowsOverlay();
+            ResetClickState();
             if (_activePieces.TryGetValue(fromIndex, out var pieceA) &&
                 _activePieces.TryGetValue(toIndex, out var pieceB))
             {
@@ -158,7 +151,7 @@ namespace Voodoo.UI.Controllers
         public async UniTask OnNoMatchSwapAsync(int fromIndex, int toIndex)
         {
             _view.BlockInput(true);
-            ResetArrowsOverlay();
+            ResetClickState();
             if (_activePieces.TryGetValue(fromIndex, out var pieceA) &&
                 _activePieces.TryGetValue(toIndex, out var pieceB))
             {
@@ -175,10 +168,10 @@ namespace Voodoo.UI.Controllers
             _view.BlockInput(false);
         }
         
-        public async UniTask OnInvalidMoveAsync(int fromIndex, int toIndex)
+        public async UniTask OnInvalidMoveAsync()
         {
             _view.BlockInput(true);
-            ResetArrowsOverlay();
+            ResetClickState();
             await _view.InvalidMoveAnimation();
             _view.BlockInput(false);
         }
@@ -186,7 +179,7 @@ namespace Voodoo.UI.Controllers
         public async UniTask OnGravityMovesAsync(IReadOnlyList<(int fromIndex, int toIndex)> moves)
         {
             _view.BlockInput(true);
-            ResetArrowsOverlay();
+            ResetClickState();
             var tasks = new List<UniTask>();
 
             foreach (var (fromIndex, toIndex) in moves)

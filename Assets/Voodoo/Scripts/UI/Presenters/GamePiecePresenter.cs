@@ -77,8 +77,6 @@ namespace Voodoo.UI.Controllers
             }
             else
             {
-                _pieceClicked = !_pieceClicked;
-                View.EnableClickedState(_pieceClicked);
                 Swiped?.Invoke(_index, direction);
             }
         }

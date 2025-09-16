@@ -32,7 +32,7 @@ namespace Voodoo.Gameplay
         public Func<IReadOnlyList<MatchCluster>,UniTask> PiecesClearAsync { get; set; } 
         public Func<int, int, UniTask> PieceSwapAsync { get; set; }
         public Func<int, int, UniTask> NoMatchSwapAsync { get; set; }
-        public Func<int, int, UniTask> InvalidMoveAsync { get; set; }
+        public Func<UniTask> InvalidMoveAsync { get; set; }
         public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; }
         public event Action<int> ScoreChanged;
         public event Action<int> TimeChanged;
@@ -200,9 +200,9 @@ namespace Voodoo.Gameplay
             await NoMatchSwapAsync(from, to);
         }
         
-        private async UniTask OnModelInvalidMove(int from, int to)
+        private async UniTask OnModelInvalidMove()
         {
-            await InvalidMoveAsync(from, to);
+            await InvalidMoveAsync();
         }
         
         private async UniTask GravityMovesAsync(IReadOnlyList<(int from, int to)> listOfMoves)
@@ -254,6 +254,11 @@ namespace Voodoo.Gameplay
         public void PieceClicked(int pieceClickedIndex)
         {
             _gameManager.ClickPiece(pieceClickedIndex);
+        }
+        
+        public void SwapPiece(int pieceClickedIndex, SwipeDirection direction)
+        {
+            _gameManager.SwipePiece(pieceClickedIndex, direction);
         }
 
         public void Pause()

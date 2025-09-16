@@ -1,4 +1,5 @@
 using System;
+using Voodoo.Scripts.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
 {
@@ -27,7 +28,7 @@ namespace Voodoo.Gameplay
             return y * Width + x;
         } 
         
-        public void GetCoordsAt(int index, out int x, out int y)
+        private void GetCoordsAt(int index, out int x, out int y)
         {
             x = index % Width;
             y = index / Width;
@@ -49,5 +50,48 @@ namespace Voodoo.Gameplay
         
         public void ClearAtIndex(int idx) => Tiles[idx] = -1;
         public bool IsIndexEmpty(int idx) => Tiles[idx] < 0;
+
+        public bool TryGetAdjacentIndex(int index, SwipeDirection direction, out int neighborIndex)
+        {
+            GetCoordsAt(index, out int x, out int y);
+
+            switch (direction)
+            {
+                case SwipeDirection.Up:
+                    if (y + 1 < Height)
+                    {
+                        neighborIndex = GetIndexAt(x, y + 1);
+                        return true;
+                    }
+                    break;
+
+                case SwipeDirection.Down:
+                    if (y - 1 >= 0)
+                    {
+                        neighborIndex = GetIndexAt(x, y - 1);
+                        return true;
+                    }
+                    break;
+
+                case SwipeDirection.Left:
+                    if (x - 1 >= 0)
+                    {
+                        neighborIndex = GetIndexAt(x - 1, y);
+                        return true;
+                    }
+                    break;
+
+                case SwipeDirection.Right:
+                    if (x + 1 < Width)
+                    {
+                        neighborIndex = GetIndexAt(x + 1, y);
+                        return true;
+                    }
+                    break;
+            }
+
+            neighborIndex = -1;
+            return false;
+        }
     }
 }

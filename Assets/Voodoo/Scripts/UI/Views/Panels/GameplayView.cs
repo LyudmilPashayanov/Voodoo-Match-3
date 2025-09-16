@@ -1,4 +1,5 @@
 using UnityEngine;
+using Voodoo.Scripts.UI.Views.Gameplay;
 
 namespace Voodoo.UI.Panels
 {

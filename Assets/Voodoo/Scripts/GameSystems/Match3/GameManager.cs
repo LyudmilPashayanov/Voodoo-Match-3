@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Match3;
+using Voodoo.Scripts.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
 {
@@ -12,7 +13,7 @@ namespace Voodoo.Gameplay
         public Func<int, int, UniTask> OnPieceSpawnAsync { get; set; }
         public Func<IReadOnlyList<MatchCluster>,UniTask> OnPiecesClearAsync { get; set; }
         public Func<int, int, UniTask> OnSwapCommittedAsync { get; set; }
-        public Func<int, int, UniTask> OnInvalidMoveAsync { get; set; }
+        public Func<UniTask> OnInvalidMoveAsync { get; set; }
         public Func<int, int, UniTask> OnNoMatchSwapAsync { get; set; }
         public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // public event Action<IReadOnlyList<(int from, int to)>> OnGravityMoves; 
 
@@ -40,7 +41,7 @@ namespace Voodoo.Gameplay
             ResolveCascadesAsync();
             OnScoreUpdated?.Invoke(999);
         }
-        
+
         public async UniTask ClickPiece(int indexClicked)
         {
             if (_currentClickedIndex == -1) // first click
@@ -59,26 +60,44 @@ namespace Voodoo.Gameplay
                 if (!Grid.AreAdjacent(previousClickedIndex, indexClicked, _grid.Width))
                 {
                     _currentClickedIndex = -1;
-                    await OnInvalidMoveAsync(previousClickedIndex, indexClicked);
+                    await OnInvalidMoveAsync();
                     return;
                 }
                 
-                _grid.Swap(previousClickedIndex, indexClicked);
-                
-                var matches = Matcher.FindAllMatches(_grid);
-                if (matches.Count == 0)
-                {
-                    _grid.Swap(previousClickedIndex, indexClicked); 
-                    _currentClickedIndex = -1;
-                    await OnNoMatchSwapAsync(previousClickedIndex, indexClicked);
-                    return;
-                }
+                await TrySwap(previousClickedIndex, indexClicked);
+            }
+        }
+        
+        public async UniTask SwipePiece(int indexClicked,  SwipeDirection direction)
+        {
+            if(_grid.TryGetAdjacentIndex(indexClicked, direction, out int neighborIndex))
+            {
+                await TrySwap(indexClicked, neighborIndex);
+            }
+            else
+            {
                 _currentClickedIndex = -1;
-                await OnSwapCommittedAsync(previousClickedIndex, indexClicked);
-                await ResolveCascadesAsync();
+                await OnInvalidMoveAsync();
             }
         }
 
+        private async UniTask TrySwap(int indexA, int indexB)
+        {
+            _grid.Swap(indexA, indexB);
+                
+            var matches = Matcher.FindAllMatches(_grid);
+            if (matches.Count == 0)
+            {
+                _grid.Swap(indexA, indexB); 
+                _currentClickedIndex = -1;
+                await OnNoMatchSwapAsync(indexA, indexB);
+                return;
+            }
+            _currentClickedIndex = -1;
+            await OnSwapCommittedAsync(indexA, indexB);
+            await ResolveCascadesAsync();
+        }
+        
         public void EndGame()
         {
             

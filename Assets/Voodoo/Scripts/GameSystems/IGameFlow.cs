@@ -15,6 +15,7 @@ namespace Voodoo.Gameplay
         
         // Commands from UI
         void PieceClicked(int pieceClickedIndex);
+        void SwapPiece(int pieceSwappedIndex, SwipeDirection direction);
         void Pause();
         void Resume();
 
@@ -23,7 +24,7 @@ namespace Voodoo.Gameplay
         Func<IReadOnlyList<MatchCluster>, UniTask> PiecesClearAsync  { get; set; }
         Func<int,int,UniTask> PieceSwapAsync { get; set; }         
         Func<int,int,UniTask> NoMatchSwapAsync { get; set; }         
-        Func<int,int,UniTask> InvalidMoveAsync { get; set; }         
+        Func<UniTask> InvalidMoveAsync { get; set; }         
         Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; }
         event Action<int> ScoreChanged;
         event Action<int> TimeChanged;             // seconds remaining

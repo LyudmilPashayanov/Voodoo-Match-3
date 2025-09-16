@@ -24,7 +24,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         void ResetState();
     }
     
-    public class GamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler, IEndDragHandler
+    public class GamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler,IDragHandler, IEndDragHandler
     {
         [SerializeField] private RectTransform _pieceTransform;
 
@@ -115,7 +115,8 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         public void OnEndDrag(PointerEventData eventData)
         {
             Vector2 delta = eventData.position - _dragStart;
-            if (delta.magnitude < 50f) return; // threshold
+            
+            if (delta.magnitude < 50f) return;
 
             if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
             {
@@ -126,6 +127,11 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
                 OnSwiped?.Invoke(delta.y > 0 ? SwipeDirection.Up : SwipeDirection.Down);
             }
         }
+        
+        public void OnDrag(PointerEventData eventData)
+        { }
         #endregion
+
+   
     }
 }
