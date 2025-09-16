@@ -13,7 +13,7 @@ namespace Voodoo.UI.Controllers
         private readonly Dictionary<int, GamePiecePresenter> _activePieces = new Dictionary<int, GamePiecePresenter>();
 
         private int _currentClickedIndex = -1;
-        public event Action<int, int> SwapPieces;
+        public event Action<int> ClickPiece;
         public BoardPresenter(BoardView view, IPiecePool pool)
         {
             _view = view;
@@ -36,6 +36,13 @@ namespace Voodoo.UI.Controllers
 
         private void PieceClicked(int indexClicked)
         {
+            UpdateArrowOverlay(indexClicked);
+            
+            ClickPiece?.Invoke(indexClicked);
+        }
+
+        private void UpdateArrowOverlay(int indexClicked)
+        {
             if (_currentClickedIndex == indexClicked) // same piece clicked
             {
                 _currentClickedIndex = -1;
@@ -47,14 +54,14 @@ namespace Voodoo.UI.Controllers
                 _view.SetArrowOverlayPosition(indexClicked);
                 _view.EnableArrowOverlay(true);
             }
-            else // attempt move
+            else 
             {
-                SwapPieces?.Invoke(_currentClickedIndex, indexClicked);
-                _currentClickedIndex = -1;
-                _view.EnableArrowOverlay(false);
+                _currentClickedIndex = indexClicked;
+                _view.SetArrowOverlayPosition(indexClicked);
+                _view.EnableArrowOverlay(true);
             }
         }
-        
+
         private void PieceSwiped(int indexSwiped, SwipeDirection direction)
         {
           //  if (indexClicked == _currentClickedIndex)
@@ -87,6 +94,7 @@ namespace Voodoo.UI.Controllers
 
         private void ClearPiece(GamePiecePresenter piecePresenter)
         {
+            _view.EnableArrowOverlay(false);
             piecePresenter.Destroy(/*OnDestroyAnimation => PiecePool.Instance.Release(piece)*/);
             _pool.Release(piecePresenter);
             piecePresenter.Clicked -= PieceClicked;
@@ -95,6 +103,7 @@ namespace Voodoo.UI.Controllers
 
         public void OnSwapCommitted(int fromIndex, int toIndex)
         {
+            _view.EnableArrowOverlay(false);
             if (_activePieces.TryGetValue(fromIndex, out var pieceA) &&
                 _activePieces.TryGetValue(toIndex, out var pieceB))
             {

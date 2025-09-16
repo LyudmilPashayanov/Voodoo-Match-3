@@ -13,7 +13,7 @@ namespace Voodoo.Gameplay
         UniTask EndGameAsync(CancellationToken ct = default);
         
         // Commands from UI
-        void RequestSwap(int fromIndex, int toIndex);
+        void PieceClicked(int pieceClickedIndex);
         void Pause();
         void Resume();
 

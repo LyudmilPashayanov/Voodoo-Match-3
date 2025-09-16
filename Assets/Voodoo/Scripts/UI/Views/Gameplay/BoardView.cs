@@ -44,7 +44,6 @@ public class BoardView : MonoBehaviour
         float posY = y * cell;
 
         return _origin + new Vector2(posX, posY);
-
     }
     
     public float GetSpriteSize()

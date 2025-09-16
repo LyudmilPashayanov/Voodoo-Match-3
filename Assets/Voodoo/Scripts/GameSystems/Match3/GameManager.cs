@@ -20,7 +20,8 @@ namespace Voodoo.Gameplay
         private readonly PieceCatalog _catalog;
         private readonly Spawner _spawner;
         private readonly Random _rng = new();
-
+        private int _currentClickedIndex = -1; // if -1 - nothing is clicked
+        
         public GameManager(int gridWidth, int gridHeight, PieceCatalog pieceCatalog)
         {
             _grid = new Grid(gridWidth, gridHeight);
@@ -36,28 +37,44 @@ namespace Voodoo.Gameplay
             OnScoreUpdated?.Invoke(999);
         }
         
-        public void RequestSwap(int a, int b)
+        public void ClickPiece(int indexClicked)
         {
-            if (!Grid.AreAdjacent(a, b, _grid.Width))
+            if (_currentClickedIndex == -1) // first click
             {
-                // TODO: Event wrong move -  not even adjacent
-                return;
-            }
-
-            _grid.Swap(a, b);
-
-            var matches = Matcher.FindAllMatches(_grid);
-            if (matches.Count == 0)
-            {
-                _grid.Swap(a, b); 
+                _currentClickedIndex = indexClicked;
                 
-                // TODO: Event wrong move -  not a match
-                return;
+                // TODO: Check if it is a bomb piece.
             }
+            else if (_currentClickedIndex == indexClicked) // player cancelling his click
+            {
+                _currentClickedIndex = -1;
+            }
+            else if (_currentClickedIndex != indexClicked) // user attempts to swap
+            {
+                int previousClickedIndex = _currentClickedIndex;
+                _currentClickedIndex = indexClicked;
+                
+                if (!Grid.AreAdjacent(previousClickedIndex, _currentClickedIndex, _grid.Width))
+                {
+                    // TODO: Event wrong move -  not even adjacent
+                    return;
+                }
+                
+                _grid.Swap(previousClickedIndex, _currentClickedIndex);
+                
+                var matches = Matcher.FindAllMatches(_grid);
+                if (matches.Count == 0)
+                {
+                    _grid.Swap(previousClickedIndex, _currentClickedIndex); 
+                
+                    // TODO: Event wrong move -  not a match at all
+                    return;
+                }
+                
+                OnSwapCommitted?.Invoke(previousClickedIndex, _currentClickedIndex);
+                ResolveCascades();
 
-            OnSwapCommitted?.Invoke(a,b);
-
-            ResolveCascades();
+            }
         }
 
         public void EndGame()

@@ -41,7 +41,6 @@ namespace Voodoo.Gameplay
             _setReference = setReference;
         }
 
-
         public async UniTask StartGameAsync(CancellationToken ct = default)
         {
             if (_gameManager != null) return;
@@ -233,10 +232,10 @@ namespace Voodoo.Gameplay
             gm.OnTimeChanged -= OnModelTimeChanged;
             gm.OnGameOver -= OnModelGameOver;
         }
-        
-        public void RequestSwap(int fromIndex, int toIndex)
+
+        public void PieceClicked(int pieceClickedIndex)
         {
-            _gameManager.RequestSwap(fromIndex, toIndex);
+            _gameManager.ClickPiece(pieceClickedIndex);
         }
 
         public void Pause()
