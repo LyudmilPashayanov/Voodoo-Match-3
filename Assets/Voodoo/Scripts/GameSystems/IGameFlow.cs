@@ -19,10 +19,12 @@ namespace Voodoo.Gameplay
         void Resume();
 
         // Events (pure data, no Unity types)
-        Func<int, PieceTypeDefinition,UniTask> PieceSpawnAsync { get; set; } //event Action<int, PieceTypeDefinition> PieceSpawned;
+        Func<int, PieceTypeDefinition,UniTask> PieceSpawnAsync { get; set; }
         Func<IReadOnlyList<MatchCluster>, UniTask> PiecesClearAsync  { get; set; }
-        Func<int,int,UniTask> PieceSwapAsync { get; set; }         // from -> to
-        Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
+        Func<int,int,UniTask> PieceSwapAsync { get; set; }         
+        Func<int,int,UniTask> NoMatchSwapAsync { get; set; }         
+        Func<int,int,UniTask> InvalidMoveAsync { get; set; }         
+        Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; }
         event Action<int> ScoreChanged;
         event Action<int> TimeChanged;             // seconds remaining
         event Action GameOver;

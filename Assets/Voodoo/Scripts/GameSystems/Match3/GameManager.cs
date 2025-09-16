@@ -12,6 +12,8 @@ namespace Voodoo.Gameplay
         public Func<int, int, UniTask> OnPieceSpawnAsync { get; set; }
         public Func<IReadOnlyList<MatchCluster>,UniTask> OnPiecesClearAsync { get; set; }
         public Func<int, int, UniTask> OnSwapCommittedAsync { get; set; }
+        public Func<int, int, UniTask> OnInvalidMoveAsync { get; set; }
+        public Func<int, int, UniTask> OnNoMatchSwapAsync { get; set; }
         public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // public event Action<IReadOnlyList<(int from, int to)>> OnGravityMoves; 
 
         public event Action<int> OnScoreUpdated;
@@ -54,26 +56,25 @@ namespace Voodoo.Gameplay
             else if (_currentClickedIndex != indexClicked) // user attempts to swap
             {
                 int previousClickedIndex = _currentClickedIndex;
-                _currentClickedIndex = indexClicked;
-                
-                if (!Grid.AreAdjacent(previousClickedIndex, _currentClickedIndex, _grid.Width))
+                if (!Grid.AreAdjacent(previousClickedIndex, indexClicked, _grid.Width))
                 {
-                    // TODO: Event wrong move -  not even adjacent
+                    _currentClickedIndex = -1;
+                    await OnInvalidMoveAsync(previousClickedIndex, indexClicked);
                     return;
                 }
                 
-                _grid.Swap(previousClickedIndex, _currentClickedIndex);
+                _grid.Swap(previousClickedIndex, indexClicked);
                 
                 var matches = Matcher.FindAllMatches(_grid);
                 if (matches.Count == 0)
                 {
-                    _grid.Swap(previousClickedIndex, _currentClickedIndex); 
-                
-                    // TODO: Event wrong move -  not a match at all
+                    _grid.Swap(previousClickedIndex, indexClicked); 
+                    _currentClickedIndex = -1;
+                    await OnNoMatchSwapAsync(previousClickedIndex, indexClicked);
                     return;
                 }
-                
-                await OnSwapCommittedAsync(previousClickedIndex, _currentClickedIndex);
+                _currentClickedIndex = -1;
+                await OnSwapCommittedAsync(previousClickedIndex, indexClicked);
                 await ResolveCascadesAsync();
             }
         }

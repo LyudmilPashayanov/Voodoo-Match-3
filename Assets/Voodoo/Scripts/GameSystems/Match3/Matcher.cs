@@ -5,8 +5,24 @@ namespace Voodoo.Scripts.GameSystems
 {
     public sealed class MatchCluster
     {
-        public readonly List<int> Indices = new(); // all cells in this cluster
+        public readonly HashSet<int> Indices; // all cells in this cluster
         public int Length => Indices.Count;
+        
+        public MatchCluster(IEnumerable<int> indices)
+        {
+            Indices = new HashSet<int>(indices);
+        }
+        public bool Overlaps(MatchCluster other)
+        {
+            return Indices.Overlaps(other.Indices);
+        }
+
+        public MatchCluster Merge(MatchCluster other)
+        {
+            var merged = new HashSet<int>(Indices);
+            merged.UnionWith(other.Indices);
+            return new MatchCluster(merged);
+        }
     }
     
     public static class Matcher
@@ -40,7 +56,8 @@ namespace Voodoo.Scripts.GameSystems
                     {
                         if (runLen >= 3)
                         {
-                            clusters.Add(CreateClusterHorizontal(grid, x - 1, y, runLen));
+                            MatchCluster newCluster = CreateClusterHorizontal(grid, x - 1, y, runLen);
+                            AddOrMergeCluster(clusters, newCluster);
                         }
                         runLen = 1;
                     }
@@ -49,7 +66,8 @@ namespace Voodoo.Scripts.GameSystems
                 // finalize row
                 if (runLen >= 3)
                 {
-                    clusters.Add(CreateClusterHorizontal(grid, w - 1, y, runLen));
+                    MatchCluster newCluster = CreateClusterHorizontal(grid, w - 1, y, runLen);
+                    AddOrMergeCluster(clusters, newCluster);
                 }
             }
 
@@ -75,7 +93,8 @@ namespace Voodoo.Scripts.GameSystems
                     {
                         if (runLen >= 3)
                         {
-                            clusters.Add(CreateClusterVertical(grid, x, y - 1, runLen));
+                            MatchCluster newCluster = CreateClusterVertical(grid, x, y - 1, runLen);
+                            AddOrMergeCluster(clusters, newCluster);
                         }
                         runLen = 1;
                     }
@@ -84,7 +103,8 @@ namespace Voodoo.Scripts.GameSystems
                 // finalize column
                 if (runLen >= 3)
                 {
-                    clusters.Add(CreateClusterVertical(grid, x, h - 1, runLen));
+                    MatchCluster newCluster = CreateClusterVertical(grid, x, h - 1, runLen);
+                    AddOrMergeCluster(clusters, newCluster);
                 }
             }
 
@@ -108,22 +128,38 @@ namespace Voodoo.Scripts.GameSystems
         
         private static MatchCluster CreateClusterHorizontal(Grid grid, int endX, int y, int runLen)
         {
-            var cluster = new MatchCluster();
+            HashSet<int> clusterIndeces = new();
             for (int k = 0; k < runLen; k++)
             {
-                cluster.Indices.Add(grid.GetIndexAt(endX - k, y));
+                clusterIndeces.Add(grid.GetIndexAt(endX - k, y));
             }
-            return cluster;
+            return new MatchCluster(clusterIndeces);
         }
 
         private static MatchCluster CreateClusterVertical(Grid grid, int x, int endY, int runLen)
         {
-            var cluster = new MatchCluster();
+            HashSet<int> clusterIndexes = new();
             for (int k = 0; k < runLen; k++)
             {
-                cluster.Indices.Add(grid.GetIndexAt(x, endY - k));
+                clusterIndexes.Add(grid.GetIndexAt(x, endY - k));
             }
-            return cluster;
+            return new MatchCluster(clusterIndexes);
+        }
+        
+        private static void AddOrMergeCluster(List<MatchCluster> clusters, MatchCluster newCluster)
+        {
+            // See if new cluster overlaps an existing one
+            for (int i = 0; i < clusters.Count; i++)
+            {
+                if (clusters[i].Overlaps(newCluster))
+                {
+                    clusters[i] = clusters[i].Merge(newCluster);
+                    return;
+                }
+            }
+
+            // Otherwise, just add it
+            clusters.Add(newCluster);
         }
     }
 }

@@ -56,6 +56,12 @@ namespace Voodoo.UI.Controllers
             }
         }
 
+        private void ResetArrowsOverlay()
+        {
+            _currentClickedIndex = -1;
+            _view.EnableArrowOverlay(false);
+        }
+
         private void PieceSwiped(int indexSwiped, SwipeDirection direction)
         {
           //  if (indexClicked == _currentClickedIndex)
@@ -73,7 +79,7 @@ namespace Voodoo.UI.Controllers
 
         private async UniTask ClearPiece(GamePiecePresenter piecePresenter)
         {
-            _view.EnableArrowOverlay(false);
+            ResetArrowsOverlay();
             await piecePresenter.DestroyAnimationAsync();
             _pool.Release(piecePresenter);
             piecePresenter.Clicked -= PieceClicked;
@@ -84,6 +90,7 @@ namespace Voodoo.UI.Controllers
 
         public async UniTask SpawnPieceAsync(int index, PieceTypeDefinition type)
         {
+            _view.BlockInput(true);
             GamePiecePresenter gamePiecePresenter = _pool.Get(type);
             if (_activePieces.TryAdd(index, gamePiecePresenter) == false)
             {
@@ -100,10 +107,13 @@ namespace Voodoo.UI.Controllers
             
             gamePiecePresenter.Clicked += PieceClicked;
             gamePiecePresenter.Swiped += PieceSwiped;
+            _view.BlockInput(false);
         }
         
         public async UniTask ClearPiecesAsync(IReadOnlyList<MatchCluster> matchesToClear)
         {
+            _view.BlockInput(true);
+            ResetArrowsOverlay();
             foreach (MatchCluster cluster in matchesToClear)
             {
                 var tasks = new List<UniTask>();
@@ -116,11 +126,13 @@ namespace Voodoo.UI.Controllers
                 }
                 await UniTask.WhenAll(tasks);
             }
+            _view.BlockInput(false);
         }
         
         public async UniTask OnSwapCommittedAsync(int fromIndex, int toIndex)
         {
-            _view.EnableArrowOverlay(false);
+            _view.BlockInput(true);
+            ResetArrowsOverlay();
             if (_activePieces.TryGetValue(fromIndex, out var pieceA) &&
                 _activePieces.TryGetValue(toIndex, out var pieceB))
             {
@@ -140,10 +152,41 @@ namespace Voodoo.UI.Controllers
                 pieceB.SetIndex(fromIndex);
                 pieceB.SetName(fromIndex.ToString());
             }
+            _view.BlockInput(false);
         }
+        
+        public async UniTask OnNoMatchSwapAsync(int fromIndex, int toIndex)
+        {
+            _view.BlockInput(true);
+            ResetArrowsOverlay();
+            if (_activePieces.TryGetValue(fromIndex, out var pieceA) &&
+                _activePieces.TryGetValue(toIndex, out var pieceB))
+            {
+                var fromPos = _view.GetBoardPositionBasedOnIndex(fromIndex);
+                var toPos = _view.GetBoardPositionBasedOnIndex(toIndex);
+                
+                pieceA.AnimatePiece(toPos);
+                await pieceB.AnimatePiece(fromPos);
+                
+                pieceA.AnimatePiece(fromPos);
+                await pieceB.AnimatePiece(toPos);
+            }
 
+            _view.BlockInput(false);
+        }
+        
+        public async UniTask OnInvalidMoveAsync(int fromIndex, int toIndex)
+        {
+            _view.BlockInput(true);
+            ResetArrowsOverlay();
+            await _view.InvalidMoveAnimation();
+            _view.BlockInput(false);
+        }
+        
         public async UniTask OnGravityMovesAsync(IReadOnlyList<(int fromIndex, int toIndex)> moves)
         {
+            _view.BlockInput(true);
+            ResetArrowsOverlay();
             var tasks = new List<UniTask>();
 
             foreach (var (fromIndex, toIndex) in moves)
@@ -154,15 +197,11 @@ namespace Voodoo.UI.Controllers
                     _activePieces[toIndex] = piece;
                     piece.SetIndex(toIndex);
                     tasks.Add(piece.AnimatePiece(_view.GetBoardPositionBasedOnIndex(toIndex)));
-                    /*piece.PlacePiece(
-                        _view.GetBoardTransform(),
-                        _view.GetBoardPositionBasedOnIndex(toIndex),
-                        toIndex
-                    );*/
                     piece.SetName(toIndex.ToString());
                 }
             }
             await UniTask.WhenAll(tasks);
+            _view.BlockInput(false);
         }
         
         #endregion

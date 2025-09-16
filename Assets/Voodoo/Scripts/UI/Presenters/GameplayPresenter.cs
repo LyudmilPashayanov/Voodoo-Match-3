@@ -33,6 +33,8 @@ namespace Voodoo.UI.Controllers
             _gameFlow.PieceSpawnAsync = _boardPresenter.SpawnPieceAsync;
             _gameFlow.PiecesClearAsync = _boardPresenter.ClearPiecesAsync;
             _gameFlow.PieceSwapAsync = _boardPresenter.OnSwapCommittedAsync;
+            _gameFlow.NoMatchSwapAsync = _boardPresenter.OnNoMatchSwapAsync;
+            _gameFlow.InvalidMoveAsync = _boardPresenter.OnInvalidMoveAsync;
             _gameFlow.OnGravityMovesAsync = _boardPresenter.OnGravityMovesAsync;
             _boardPresenter.ClickPiece += _gameFlow.PieceClicked;
             

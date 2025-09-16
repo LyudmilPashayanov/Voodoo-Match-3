@@ -28,10 +28,12 @@ namespace Voodoo.Gameplay
 
         public bool IsPrepared { get; private set; }
 
-        public Func<int, PieceTypeDefinition, UniTask> PieceSpawnAsync { get; set; } // public event Action<int, PieceTypeDefinition> PieceSpawned;
-        public Func<IReadOnlyList<MatchCluster>,UniTask> PiecesClearAsync { get; set; } // public event Action<int[]> PiecesCleared;
-        public Func<int, int, UniTask> PieceSwapAsync { get; set; }// public event Action<int, int> PiecesSwapped;
-        public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // event Action<IReadOnlyList<(int from, int to)>> GravityMoves;
+        public Func<int, PieceTypeDefinition, UniTask> PieceSpawnAsync { get; set; }
+        public Func<IReadOnlyList<MatchCluster>,UniTask> PiecesClearAsync { get; set; } 
+        public Func<int, int, UniTask> PieceSwapAsync { get; set; }
+        public Func<int, int, UniTask> NoMatchSwapAsync { get; set; }
+        public Func<int, int, UniTask> InvalidMoveAsync { get; set; }
+        public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; }
         public event Action<int> ScoreChanged;
         public event Action<int> TimeChanged;
         public event Action GameOver;
@@ -193,6 +195,16 @@ namespace Voodoo.Gameplay
             await PieceSwapAsync(from, to);
         }
         
+        private async UniTask OnModelNoMatchSwap(int from, int to)
+        {
+            await NoMatchSwapAsync(from, to);
+        }
+        
+        private async UniTask OnModelInvalidMove(int from, int to)
+        {
+            await InvalidMoveAsync(from, to);
+        }
+        
         private async UniTask GravityMovesAsync(IReadOnlyList<(int from, int to)> listOfMoves)
         {
             await OnGravityMovesAsync(listOfMoves);
@@ -218,6 +230,8 @@ namespace Voodoo.Gameplay
             gm.OnPieceSpawnAsync = OnModelPieceSpawnedAsync;
             gm.OnPiecesClearAsync = OnModelPiecesClearedAsync;
             gm.OnSwapCommittedAsync = OnModelSwappedAsync;
+            gm.OnNoMatchSwapAsync = OnModelNoMatchSwap;
+            gm.OnInvalidMoveAsync = OnModelInvalidMove;
             gm.OnGravityMovesAsync = GravityMovesAsync;
             gm.OnScoreUpdated += OnModelScoreUpdated;
             gm.OnTimeChanged += OnModelTimeChanged;
@@ -229,6 +243,8 @@ namespace Voodoo.Gameplay
             gm.OnPieceSpawnAsync = null;
             gm.OnPiecesClearAsync = null;
             gm.OnSwapCommittedAsync = null;
+            gm.OnNoMatchSwapAsync = null;
+            gm.OnInvalidMoveAsync = null;
             gm.OnGravityMovesAsync = null;
             gm.OnScoreUpdated -= OnModelScoreUpdated;
             gm.OnTimeChanged -= OnModelTimeChanged;

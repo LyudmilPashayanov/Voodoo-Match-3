@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,4 +70,11 @@ public class BoardView : MonoBehaviour
         _arrowsMoveOverlay.gameObject.SetActive(enable);
     }
 
+    public UniTask InvalidMoveAnimation()
+    {
+        return _boardTransform
+            .DOShakePosition(0.3f, new Vector3(10f, 0f, 0f), 15, 90)
+            .SetEase(Ease.OutQuad)
+            .ToUniTask();
+    }
 }
