@@ -1,10 +1,12 @@
-using Voodoo.UI.Controllers;
+using System.Collections.Generic;
+using Voodoo.UI.Presenters;
 
-namespace Voodoo.Scripts.GameSystems.Utilities
+namespace Voodoo.GameSystems.Utilities
 {
     public interface IPiecePool
     {
         GamePiecePresenter Get(PieceTypeDefinition def);
         void Release(GamePiecePresenter presenter);
+        void ReleaseAll(IEnumerable<GamePiecePresenter> activePieces);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Voodoo.Scripts.GameSystems.Utilities
+namespace Voodoo.GameSystems.Utilities
 {
     public class GameRunner : MonoBehaviour
     {

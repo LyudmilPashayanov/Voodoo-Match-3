@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Voodoo.Gameplay
+namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Base type representation of the pieces available for a level.
+    /// </summary>
     public sealed class PieceCatalog
     {
         private readonly PieceType[] _pieceTypes;   // index == typeId

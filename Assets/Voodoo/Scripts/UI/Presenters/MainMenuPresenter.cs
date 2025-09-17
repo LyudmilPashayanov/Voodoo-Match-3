@@ -1,6 +1,6 @@
 using Voodoo.UI.Panels;
 
-namespace Voodoo.UI.Controllers
+namespace Voodoo.UI.Presenters
 {
     public class MainMenuPresenter
     {

@@ -1632,7 +1632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -37, y: -33.8}
+  m_AnchoredPosition: {x: -37, y: -33.80005}
   m_SizeDelta: {x: 151.812, y: 105.0973}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &770290309
@@ -2092,13 +2092,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e011754a6e015b74ea41b4157ffc07e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelSetConfigRef:
-    m_AssetGUID: 122d4ace0d5b30149a823d70efef9403
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   _UIManager: {fileID: 2011249549}
   _gameRunner: {fileID: 1203657478}
+  _levelsConfig: {fileID: 11400000, guid: 18d4340a2d9a25e4fb7dfb8b3dd9729a, type: 2}
 --- !u!4 &1092457039
 Transform:
   m_ObjectHideFlags: 0

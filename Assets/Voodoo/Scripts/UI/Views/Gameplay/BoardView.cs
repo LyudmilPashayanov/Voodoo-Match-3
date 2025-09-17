@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {

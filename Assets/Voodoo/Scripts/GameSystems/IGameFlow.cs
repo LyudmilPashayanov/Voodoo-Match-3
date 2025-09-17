@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using Voodoo.Scripts.GameSystems;
-using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.Gameplay.Core;
+using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
 {
@@ -11,7 +11,7 @@ namespace Voodoo.Gameplay
     { 
         IPiecePool Pool { get; }
         UniTask StartGameAsync(CancellationToken ct = default);
-        UniTask EndGameAsync(CancellationToken ct = default);
+        void EndGame();
         
         // Commands from Unity
         void PieceClicked(int pieceClickedIndex);

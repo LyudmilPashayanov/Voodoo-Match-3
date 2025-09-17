@@ -10,7 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e91ae5ec2f5b3374baede4ac0772564e, type: 3}
-  m_Name: Level_2
+  m_Name: LevelsConfig
   m_EditorClassIdentifier: 
-  LevelId: 2
-  PieceSet: {fileID: 11400000, guid: b081d33c0c3b6ca4bab7b303755e07fd, type: 2}
+  Levels:
+  - LevelId: 1
+    PieceSetRef:
+      m_AssetGUID: 122d4ace0d5b30149a823d70efef9403
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - LevelId: 2
+    PieceSetRef:
+      m_AssetGUID: b081d33c0c3b6ca4bab7b303755e07fd
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0

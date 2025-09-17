@@ -1,7 +1,7 @@
 using System;
-using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.GameSystems.Utilities;
 
-namespace Voodoo.Gameplay
+namespace Voodoo.Gameplay.Core
 {
     public class Grid
     {

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Voodoo.Scripts.UI.Views.Gameplay;
-using Voodoo.UI.Controllers;
+using Voodoo.UI.Presenters;
 
-namespace Voodoo.Scripts.GameSystems.Utilities
+namespace Voodoo.GameSystems.Utilities
 {
     public sealed class PiecePool : IPiecePool, IDisposable
     {
@@ -82,6 +82,14 @@ namespace Voodoo.Scripts.GameSystems.Utilities
             
             presenter.ReleaseAndReset(_inactiveRoot);
             stack.Push(presenter);
+        }
+
+        public void ReleaseAll(IEnumerable<GamePiecePresenter> activePieces)
+        {
+            foreach (var presenter in activePieces)
+            {
+                Release(presenter);
+            }
         }
 
         public void Dispose()

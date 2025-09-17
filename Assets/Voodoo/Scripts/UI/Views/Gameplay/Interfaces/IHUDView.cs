@@ -1,6 +1,6 @@
 using System;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay.Interfaces
+namespace Voodoo.Scripts.UI.Views.Gameplay
 {
     public interface IHUDView
     {

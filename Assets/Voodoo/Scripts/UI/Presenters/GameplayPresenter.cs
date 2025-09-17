@@ -1,10 +1,11 @@
 using System;
 using DG.Tweening;
+using Voodoo.ConfigScriptableObjects;
 using Voodoo.Gameplay;
-using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.GameSystems.Utilities;
 using Voodoo.UI.Panels;
 
-namespace Voodoo.UI.Controllers
+namespace Voodoo.UI.Presenters
 {
     public class GameplayPresenter : IDisposable 
     {
@@ -14,6 +15,8 @@ namespace Voodoo.UI.Controllers
         private BoardPresenter _boardPresenter;
         private HUDPresenter _HUDPresenter;
         private GameRunner _gameRunner;
+        private PiecePoolFactory _piecePoolFactory;
+        private LevelsConfig _levelsConfig;
 
         public GameplayPresenter(GameplayView view, IUINavigator uiNavigator)
         {
@@ -21,20 +24,28 @@ namespace Voodoo.UI.Controllers
             _uiNavigator =  uiNavigator;
         }
 
-        public void Init(IGameFlow gameFlow, GameRunner gameRunner)
+        public void Init(GameRunner gameRunner, PiecePoolFactory  piecePoolFactory, LevelsConfig levelsConfig)
         {
-            _gameFlow = gameFlow;
             _gameRunner = gameRunner;
-
-            gameFlow.GameLoaded += GameLoaded;
-            gameFlow.GameOver += GameOver;
-
-            _gameRunner.OnTick += gameFlow.Tick;
+            _piecePoolFactory = piecePoolFactory;
+            _levelsConfig = levelsConfig;
         }
         
-        public void LoadGame()
+        public void LoadGame(int levelToLoad)
         { 
             _view.ShowLoading();
+            
+            LevelEntry entry = _levelsConfig.Levels.Find(l => l.LevelId == levelToLoad);
+            if (entry == null)
+            {
+                throw new Exception("No level with id " + levelToLoad);
+            }
+            
+            _gameFlow = new GameFlow(entry.PieceSetRef, _piecePoolFactory);
+            
+            _gameFlow.GameLoaded += GameLoaded;
+            _gameFlow.GameOver += GameOver;
+            
             _gameFlow.StartGameAsync();
         }
 
@@ -48,6 +59,8 @@ namespace Voodoo.UI.Controllers
             InitializeBoard(gridWidth, gridHeight);
             InitializeHUD();
             
+            _gameRunner.OnTick += _gameFlow.Tick;
+
             _view.HideLoading();
         }
 
@@ -63,10 +76,12 @@ namespace Voodoo.UI.Controllers
             _gameRunner.PauseEngineTime();
         }
         
-        private void QuitToMenu()
+        private void QuitGameplay()
         {
             _gameRunner.ResumeEngineTime();
             _uiNavigator.ShowMainMenu();
+            _gameFlow.EndGame();
+            Dispose();
         }
         
         private void InitializeBoard(int gridWidth, int gridHeight)
@@ -96,12 +111,14 @@ namespace Voodoo.UI.Controllers
 
             _HUDPresenter.GamePaused += PauseGame;
             _HUDPresenter.GameResumed += ResumeGame;
-            _HUDPresenter.QuitToMenu += QuitToMenu;
+            _HUDPresenter.QuitToMenu += QuitGameplay;
             
         }
 
         public void Dispose()
         {
+            _boardPresenter.Dispose();
+
             _gameFlow.GameLoaded -= GameLoaded;
             _gameFlow.GameOver -= GameOver;
             
@@ -109,8 +126,8 @@ namespace Voodoo.UI.Controllers
             _gameFlow.ScoreChanged -= _HUDPresenter.UpdateScore;
             _gameFlow.GameOver -= _HUDPresenter.ShowEndScreen;
 
-            _gameRunner.OnTick += _gameFlow.Tick;
-
+            _gameRunner.OnTick -= _gameFlow.Tick;
+            
             // maybe these are not needed as they will be replaced in case the gameplayPresenter changes.
             _gameFlow.PieceSpawnAsync = null;
             _gameFlow.PiecesClearAsync = null;

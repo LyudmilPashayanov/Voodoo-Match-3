@@ -22,8 +22,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b4a7fed08eefbca40b3e0eb69ab95ee4
-    m_Address: Assets/Voodoo/ScriptableObjects/Level_2.asset
+  - m_GUID: b081d33c0c3b6ca4bab7b303755e07fd
+    m_Address: Assets/Voodoo/ScriptableObjects/BombLevel.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

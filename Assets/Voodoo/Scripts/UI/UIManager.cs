@@ -1,6 +1,5 @@
 using UnityEngine;
-using Voodoo.Gameplay;
-using Voodoo.UI.Controllers;
+using Voodoo.UI.Presenters;
 using Voodoo.UI.Panels;
 
 namespace Voodoo.UI
@@ -32,7 +31,7 @@ namespace Voodoo.UI
         public void StartGameplay()
         {
             ShowPanel(_gameplayView);
-            _gameplayPresenter.LoadGame();
+            _gameplayPresenter.LoadGame(1);
         }
         
         private void ShowPanel(UIPanelView panelToShow)

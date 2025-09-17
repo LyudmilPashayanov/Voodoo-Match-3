@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Voodoo.ConfigScriptableObjects;
-using Voodoo.Scripts.GameSystems;
-using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.Gameplay.Core;
+using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
 {
@@ -15,19 +15,19 @@ namespace Voodoo.Gameplay
     {
         private GameManager _gameManager;
         
-        private readonly AssetReferenceT<PieceSetConfig> _setReference;
-       
-        // store handles so we can release later
-        private List<AsyncOperationHandle<GameObject>> _prefabHandles;
-        private AsyncOperationHandle<PieceSetConfig> _setHandle;
+        private readonly AssetReferenceT<LevelConfig> _setReference;
+        private readonly PiecePoolFactory _poolFactory;
+
+
+        private AsyncOperationHandle<LevelConfig> _setHandle;
         
-        private PieceSetConfig _set;
-        private PieceTypeDefinition[] _availableTypes;     // index == typeId used by GameManager
+        private LevelConfig _set;
+        private PieceTypeDefinition[] _availableTypes; // index == typeId used by GameManager
+
+        
         private PiecePool _pool;
         public IPiecePool Pool => _pool;
-
-        public bool IsPrepared { get; private set; }
-
+        
         public Func<int, PieceTypeDefinition, UniTask> PieceSpawnAsync { get; set; }
         public Func<IReadOnlyList<MatchCluster>,UniTask> PiecesClearAsync { get; set; } 
         public Func<int, int, UniTask> PieceSwapAsync { get; set; }
@@ -39,15 +39,20 @@ namespace Voodoo.Gameplay
         public event Action GameOver;
         public event Action<int, int> GameLoaded;
         
-        public GameFlow(AssetReferenceT<PieceSetConfig> setReference)
+        public GameFlow(AssetReferenceT<LevelConfig> setReference, PiecePoolFactory piecePoolFactory)
         {
             _setReference = setReference;
+            _poolFactory = piecePoolFactory;
         }
 
+        /// <summary>
+        /// After loading assets and pool, creates the GameManager and starts ot. 
+        /// </summary>
         public async UniTask StartGameAsync(CancellationToken ct = default)
         {
             if (_gameManager != null) return;
-            if (!IsPrepared) await PrepareAsync(ct);
+            
+            await PrepareAsync(ct);
     
             int w = _set.GridWidth;
             int h = _set.GridHeight;
@@ -68,95 +73,36 @@ namespace Voodoo.Gameplay
     
             GameLoaded?.Invoke(w, h);
             _gameManager.StartGame();
-            
         }
         
+        /// <summary>
+        /// Loads any addressable assets and creates the Pool if needed.
+        /// </summary>
         private async UniTask PrepareAsync(CancellationToken ct = default)
         {
-            if (IsPrepared) return;
-    
             // Load the set
             _setHandle = _setReference.LoadAssetAsync();
             await _setHandle.ToUniTask(cancellationToken: ct);
             if (_setHandle.Status != AsyncOperationStatus.Succeeded)
+            {
                 throw new System.Exception("Failed to load PieceSetConfig");
+            }
+            
             _set = _setHandle.Result;
     
-            // Load each prefab and build the map
-            var prefabMap = new Dictionary<PieceTypeDefinition, GameObject>(_set.availableTypes.Length);
-            var handles = new List<AsyncOperationHandle<GameObject>>(_set.availableTypes.Length);
-    
-            foreach (var def in _set.availableTypes)
-            {
-                var h = def.prefabReference.LoadAssetAsync<GameObject>();
-                handles.Add(h);
-            }
-            // await all
-            foreach (var h in handles) await h.ToUniTask(cancellationToken: ct);
-    
-            // collect into map (parallel order with availableTypes)
-            for (int i = 0; i < _set.availableTypes.Length; i++)
-            {
-                var def = _set.availableTypes[i];
-                var h = handles[i];
-                if (h.Status != AsyncOperationStatus.Succeeded)
-                    throw new System.Exception($"Failed to load prefab for '{def.id}'");
-                prefabMap[def] = h.Result;
-            }
-    
-            // Compute prewarm counts (≈ board slots * 1.25 spread across types)
-            var prewarm = ComputePrewarmEven(_set.availableTypes, _set.GridWidth, _set.GridHeight);
-    
-            // Initialize the pool synchronously with the prefabs (no async here)
-            _pool ??= new PiecePool();
-            _pool.Initialize(prefabMap, prewarm);
-    
-            // Keep prefab handles to release on EndGameAsync
-            _prefabHandles = handles;
-    
-            IsPrepared = true;
-        }
-      
-        private static Dictionary<PieceTypeDefinition, int> ComputePrewarmEven(PieceTypeDefinition[] types, int w, int h, float buffer = 1.25f)
-        {
-            int total = Mathf.CeilToInt(w * h * Mathf.Max(buffer, 1f));
-            var dict = new Dictionary<PieceTypeDefinition, int>(types.Length);
-            if (types.Length == 0) return dict;
-
-            int baseEach = total / types.Length;
-            int rem = total % types.Length;
-            for (int i = 0; i < types.Length; i++)
-                dict[types[i]] = baseEach + (i < rem ? 1 : 0);
-
-            return dict;
+            _pool = await _poolFactory.GetOrCreateAsync(_set, ct);
         }
         
-        public async UniTask EndGameAsync(CancellationToken ct = default)
+        public void EndGame()
         {
             if (_gameManager != null)
             {
                 _gameManager.EndGame();
                 UnwireModelEvents(_gameManager);
                 _gameManager = null;
-
-                // Let any final animations/process catch up
-                await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate, ct);
             }
-
-            // Dispose pool instances (does not touch Addressables)
-            if (_pool != null)
-            {
-                _pool.Dispose();
-                _pool = null;
-            }
-
-            // Release prefab handles
-            if (_prefabHandles != null)
-            {
-                foreach (var h in _prefabHandles)
-                    if (h.IsValid()) Addressables.Release(h);
-                _prefabHandles = null;
-            }
+            
+            _pool = null;
 
             // Release set
             if (_setHandle.IsValid())
@@ -166,9 +112,6 @@ namespace Voodoo.Gameplay
             }
 
             _set = null;
-            IsPrepared = false;
-
-            await UniTask.CompletedTask;
         }
         
         /// <summary>
@@ -253,32 +196,32 @@ namespace Voodoo.Gameplay
 
         public void PieceClicked(int pieceClickedIndex)
         {
-            _ = _gameManager.ClickPiece(pieceClickedIndex);
+            _ = _gameManager?.ClickPiece(pieceClickedIndex);
         }
         
         public void SwapPiece(int pieceClickedIndex, SwipeDirection direction)
         {
-            _ = _gameManager.SwipePiece(pieceClickedIndex, direction);
+            _ = _gameManager?.SwipePiece(pieceClickedIndex, direction);
         }
 
         public void Tick(float deltaTime)
         {
-            _gameManager.TickTime(deltaTime);
+            _gameManager?.TickTime(deltaTime);
         }
         
         public void Pause()
         {
-            _gameManager.Pause();
+            _gameManager?.Pause();
         }
 
         public void Resume()
         {
-            _gameManager.Resume();
+            _gameManager?.Resume();
         }
         
         public void Dispose()
         {
-            _ = EndGameAsync();
+            EndGame();
         }
     }
 }

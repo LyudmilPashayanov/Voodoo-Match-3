@@ -1,4 +1,4 @@
-namespace Voodoo.Scripts.GameSystems.Utilities
+namespace Voodoo.GameSystems.Utilities
 {
     public enum SwipeDirection
     {

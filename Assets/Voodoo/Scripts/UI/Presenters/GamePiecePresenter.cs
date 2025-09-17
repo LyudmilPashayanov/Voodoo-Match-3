@@ -1,10 +1,11 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Voodoo.Scripts.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
+using Voodoo.Gameplay.Core;
+using Voodoo.GameSystems.Utilities;
+using Voodoo.Scripts.UI.Views.Gameplay;
 
-namespace Voodoo.UI.Controllers
+namespace Voodoo.UI.Presenters
 {
     public class GamePiecePresenter : IDisposable
     {

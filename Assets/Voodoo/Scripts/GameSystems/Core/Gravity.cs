@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Voodoo.Gameplay;
 
-namespace Voodoo.Scripts.GameSystems.Match3
+namespace Voodoo.Gameplay.Core
 {
     public static class Gravity
     {

@@ -3,8 +3,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Voodoo.Scripts.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
+using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {

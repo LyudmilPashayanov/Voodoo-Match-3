@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {

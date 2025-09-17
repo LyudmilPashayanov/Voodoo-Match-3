@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay.Interfaces
+namespace Voodoo.Scripts.UI.Views.Gameplay
 {
     public interface IBoardView
     {

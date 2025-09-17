@@ -1,9 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.GameSystems.Utilities;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay.Interfaces
+namespace Voodoo.Scripts.UI.Views.Gameplay
 {
     public interface IGamePieceView
     {

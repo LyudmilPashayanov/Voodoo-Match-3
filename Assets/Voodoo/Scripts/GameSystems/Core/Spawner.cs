@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Voodoo.Gameplay;
 
-namespace Voodoo.Scripts.GameSystems
+namespace Voodoo.Gameplay.Core
 {
     public sealed class Spawner
     {

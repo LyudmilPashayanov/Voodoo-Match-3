@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Voodoo.Scripts.GameSystems;
-using Voodoo.Scripts.GameSystems.Match3;
-using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.GameSystems.Utilities;
 
-namespace Voodoo.Gameplay
+namespace Voodoo.Gameplay.Core
 {
     public class GameManager
     {

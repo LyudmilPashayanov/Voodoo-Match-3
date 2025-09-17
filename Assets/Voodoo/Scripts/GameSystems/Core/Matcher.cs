@@ -1,30 +1,7 @@
 using System.Collections.Generic;
-using Grid = Voodoo.Gameplay.Grid;
 
-namespace Voodoo.Scripts.GameSystems
+namespace Voodoo.Gameplay.Core
 {
-    public sealed class MatchCluster
-    {
-        public readonly HashSet<int> Indices; // all cells in this cluster
-        public int Length => Indices.Count;
-        
-        public MatchCluster(IEnumerable<int> indices)
-        {
-            Indices = new HashSet<int>(indices);
-        }
-        public bool Overlaps(MatchCluster other)
-        {
-            return Indices.Overlaps(other.Indices);
-        }
-
-        public MatchCluster Merge(MatchCluster other)
-        {
-            var merged = new HashSet<int>(Indices);
-            merged.UnionWith(other.Indices);
-            return new MatchCluster(merged);
-        }
-    }
-    
     public static class Matcher
     {
         public static IReadOnlyList<MatchCluster> FindAllMatches(Grid grid, bool exitEarly = false)
@@ -146,9 +123,11 @@ namespace Voodoo.Scripts.GameSystems
             return new MatchCluster(clusterIndexes);
         }
         
+        /// <summary>
+        /// See if new cluster overlaps an existing one, otherwise just adds it.
+        /// </summary>
         private static void AddOrMergeCluster(List<MatchCluster> clusters, MatchCluster newCluster)
         {
-            // See if new cluster overlaps an existing one
             for (int i = 0; i < clusters.Count; i++)
             {
                 if (clusters[i].Overlaps(newCluster))
@@ -158,7 +137,6 @@ namespace Voodoo.Scripts.GameSystems
                 }
             }
 
-            // Otherwise, just add it
             clusters.Add(newCluster);
         }
     }

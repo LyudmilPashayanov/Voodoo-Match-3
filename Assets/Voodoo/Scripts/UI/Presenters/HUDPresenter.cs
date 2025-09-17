@@ -1,7 +1,7 @@
 using System;
-using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
+using Voodoo.Scripts.UI.Views.Gameplay;
 
-namespace Voodoo.UI.Controllers
+namespace Voodoo.UI.Presenters
 {
     public class HUDPresenter
     {

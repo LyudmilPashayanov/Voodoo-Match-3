@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: caf6bc6d8d23ab643ba4f051891c9772, type: 3}
-  m_Name: BombPieceSet
+  m_Name: NormalLevel
   m_EditorClassIdentifier: 
   availableTypes:
   - {fileID: 11400000, guid: c3ae054ff2d4b204e9727c166c79e365, type: 2}

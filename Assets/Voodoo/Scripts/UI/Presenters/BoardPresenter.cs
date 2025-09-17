@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Voodoo.Scripts.GameSystems;
-using Voodoo.Scripts.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
+using Voodoo.Gameplay.Core;
+using Voodoo.GameSystems.Utilities;
+using Voodoo.Scripts.UI.Views.Gameplay;
 
-namespace Voodoo.UI.Controllers
+namespace Voodoo.UI.Presenters
 {
-    public class BoardPresenter
+    public class BoardPresenter : IDisposable
     {
         private readonly IBoardView _view;
         
@@ -198,5 +198,11 @@ namespace Voodoo.UI.Controllers
         }
         
         #endregion
+
+        public void Dispose()
+        {
+            _pool.ReleaseAll(_activePieces.Values);
+            _activePieces.Clear();
+        }
     }
 }
