@@ -601,6 +601,18 @@ PrefabInstance:
       propertyPath: m_text
       value: --
       objectReference: {fileID: 0}
+    - target: {fileID: 1682364352775976360, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -73
+      objectReference: {fileID: 0}
+    - target: {fileID: 2494970680337346644, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -106.80005
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328183348130767450, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -73
+      objectReference: {fileID: 0}
     - target: {fileID: 3904400561579116469, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
       propertyPath: m_Name
       value: StartLevel no bombs
