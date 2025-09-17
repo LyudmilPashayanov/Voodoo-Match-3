@@ -11,12 +11,6 @@ namespace Voodoo.UI.Panels
         public BoardView BoardView => _boardView;
         public HUDView HUDView => _HUDView;
         
-        protected override void OnViewLeft()
-        {
-            _boardView.CleanAndReset();
-            _HUDView.CleanAndReset();
-        }
-
         public void ShowLoading()
         {
             Debug.Log("Loading...");
@@ -26,5 +20,8 @@ namespace Voodoo.UI.Panels
         {
             Debug.Log("GAME READY");
         }
+
+        protected override void OnViewLeft()
+        { }
     }
 }

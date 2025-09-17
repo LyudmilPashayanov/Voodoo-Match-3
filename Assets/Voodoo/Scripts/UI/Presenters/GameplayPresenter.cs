@@ -118,7 +118,8 @@ namespace Voodoo.UI.Presenters
         public void Dispose()
         {
             _boardPresenter.Dispose();
-
+            _HUDPresenter.Dispose();
+            
             _gameFlow.GameLoaded -= GameLoaded;
             _gameFlow.GameOver -= GameOver;
             

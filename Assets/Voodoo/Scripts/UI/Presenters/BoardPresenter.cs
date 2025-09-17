@@ -203,6 +203,7 @@ namespace Voodoo.UI.Presenters
         {
             _pool.ReleaseAll(_activePieces.Values);
             _activePieces.Clear();
+            _view.CleanAndReset();
         }
     }
 }

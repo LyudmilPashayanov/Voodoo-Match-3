@@ -13,5 +13,6 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         public void SetArrowOverlayPosition(int index);
         public void EnableArrowOverlay(bool enable);
         public UniTask InvalidMoveAnimation();
+        public void CleanAndReset();
     }
 }

@@ -3,7 +3,7 @@ using Voodoo.Scripts.UI.Views.Gameplay;
 
 namespace Voodoo.UI.Presenters
 {
-    public class HUDPresenter
+    public class HUDPresenter : IDisposable
     {
         IHUDView _view;
 
@@ -49,6 +49,14 @@ namespace Voodoo.UI.Presenters
         private void QuitGameToMenu()
         {
             QuitToMenu?.Invoke();
+        }
+
+        public void Dispose()
+        {
+            _view.PauseButtonPressed -= PauseGame;
+            _view.ResumeButtonPressed -= ResumeGame;
+            _view.QuitToMenuButtonPressed -= QuitGameToMenu;
+            _view.CleanAndReset();
         }
     }
 }

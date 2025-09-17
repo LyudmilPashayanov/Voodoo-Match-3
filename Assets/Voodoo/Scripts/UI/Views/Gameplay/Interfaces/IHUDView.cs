@@ -11,5 +11,6 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         void HidePauseMenu();
         public void UpdateTime(int time);
         public void UpdateScore(int score);
+        void CleanAndReset();
     }
 }
