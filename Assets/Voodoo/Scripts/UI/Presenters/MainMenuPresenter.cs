@@ -14,9 +14,9 @@ namespace Voodoo.UI.Presenters
             view.Subscribe(OnPlayClicked, OnQuitClicked);
         }
         
-        private void OnPlayClicked()
+        private void OnPlayClicked(int levelId)
         {
-            _uiNavigator.StartGameplay();
+            _uiNavigator.StartGameplay(levelId);
         }
 
         private void OnQuitClicked()

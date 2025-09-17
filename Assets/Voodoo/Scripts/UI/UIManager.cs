@@ -17,7 +17,7 @@ namespace Voodoo.UI
         public MainMenuView MainMenuView => _mainMenuView;
         public GameplayView GameplayView => _gameplayView;
         
-        public void Init(MainMenuPresenter  mainMenuPresenter, GameplayPresenter gameplayPresenter)
+        public void Init(MainMenuPresenter mainMenuPresenter, GameplayPresenter gameplayPresenter)
         {
             _mainMenuPresenter = mainMenuPresenter;
             _gameplayPresenter = gameplayPresenter;
@@ -28,10 +28,10 @@ namespace Voodoo.UI
             ShowPanel(_mainMenuView);
         }
 
-        public void StartGameplay()
+        public void StartGameplay(int levelId)
         {
             ShowPanel(_gameplayView);
-            _gameplayPresenter.LoadGame(2);
+            _gameplayPresenter.LoadGame(levelId);
         }
         
         private void ShowPanel(UIPanelView panelToShow)

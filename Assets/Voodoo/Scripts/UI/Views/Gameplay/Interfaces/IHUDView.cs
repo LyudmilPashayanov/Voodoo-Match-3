@@ -14,6 +14,6 @@ namespace Voodoo.UI.Views.Interfaces
         void UpdateScore(int score);
         void CleanAndReset();
         Vector2 GetScorePosition();
-        Transform GetRootTransform();
+        Transform GetFloatingScoreParent();
     }
 }

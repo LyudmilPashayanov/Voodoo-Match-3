@@ -6,13 +6,28 @@ namespace Voodoo.UI.Panels
 {
     public class MainMenuView : UIPanelView
     {
-        [SerializeField] private Button _startGameButton;
+        [SerializeField] private Button _startLevelNormalButton;
+        [SerializeField] private Button _startLevelBombsButton;
         [SerializeField] private Button _exitGameButton;
 
-        public void Subscribe(Action onStartGameClicked, Action onExitGameClicked)
+        private Action<int> _startGameLevel;
+        
+        public void Subscribe(Action<int> onStartLevelSelected, Action onExitGameClicked)
         {
-            _startGameButton.onClick.AddListener(onStartGameClicked.Invoke);
+            _startGameLevel += onStartLevelSelected;
+            _startLevelNormalButton.onClick.AddListener(StartLevelNormal);
+            _startLevelBombsButton.onClick.AddListener(StartLevelBombs);
             _exitGameButton.onClick.AddListener(onExitGameClicked.Invoke);
+        }
+
+        private void StartLevelNormal()
+        {
+            _startGameLevel?.Invoke(1);
+        }
+        
+        private void StartLevelBombs()
+        {
+            _startGameLevel?.Invoke(2);
         }
         
         protected override void OnViewLeft()

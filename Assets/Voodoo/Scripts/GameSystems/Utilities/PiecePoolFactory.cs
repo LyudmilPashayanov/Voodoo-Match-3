@@ -36,9 +36,16 @@ namespace Voodoo.GameSystems.Utilities
             var prefabMap = new Dictionary<PieceTypeDefinition, GameObject>(set.availableTypes.Length);
             var addressableHandles = new List<AsyncOperationHandle<GameObject>>(set.availableTypes.Length);
 
-            foreach (PieceTypeDefinition definitionToLoad in set.availableTypes)
+            foreach (var def in set.availableTypes)
             {
-                addressableHandles.Add(definitionToLoad.prefabReference.LoadAssetAsync<GameObject>());
+                if (def.prefabReference.OperationHandle.IsValid())
+                {
+                    addressableHandles.Add(def.prefabReference.OperationHandle.Convert<GameObject>());
+                }
+                else
+                {
+                    addressableHandles.Add(def.prefabReference.LoadAssetAsync<GameObject>());
+                }
             }
     
             List<UniTask> tasks = new List<UniTask>(addressableHandles.Count);

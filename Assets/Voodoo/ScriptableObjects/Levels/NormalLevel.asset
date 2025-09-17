@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: NormalLevel
   m_EditorClassIdentifier: 
   availableTypes:
-  - {fileID: 11400000, guid: c3ae054ff2d4b204e9727c166c79e365, type: 2}
   - {fileID: 11400000, guid: d5276e9edc43e924ea133a19eb8ec717, type: 2}
   - {fileID: 11400000, guid: 3777d457662af5d44ba150034b3de77d, type: 2}
   - {fileID: 11400000, guid: f3dcd8a0c743b274a8753287e07e0b33, type: 2}
   - {fileID: 11400000, guid: ccbe6133d210f8948bc525a74fd81a93, type: 2}
-  GridWidth: 8
-  GridHeight: 8
-  timeForLevel: 30
+  GridWidth: 6
+  GridHeight: 6
+  timeForLevel: 20

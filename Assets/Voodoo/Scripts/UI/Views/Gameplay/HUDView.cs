@@ -9,6 +9,7 @@ namespace Voodoo.UI.Views.Gameplay
     public class HUDView: MonoBehaviour, IHUDView
     {
         [SerializeField] private RectTransform _pauseMenu;
+        [SerializeField] private RectTransform _floatingScorePanel;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private Button _resumeButton;
         [SerializeField] private Button _backToMenuButton;
@@ -43,9 +44,9 @@ namespace Voodoo.UI.Views.Gameplay
             return _scoreText.rectTransform.position;
         }
 
-        public Transform GetRootTransform()
+        public Transform GetFloatingScoreParent()
         {
-            return transform;
+            return _floatingScorePanel.transform;
         }
 
         public void UpdateTime(int time)

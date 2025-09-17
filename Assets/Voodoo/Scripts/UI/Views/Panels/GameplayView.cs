@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Android;
 using Voodoo.UI.Views.Gameplay;
 
 namespace Voodoo.UI.Panels
@@ -15,12 +16,12 @@ namespace Voodoo.UI.Panels
         
         public void ShowLoading()
         {
-            Debug.Log("Loading...");
+            //TODO: Add loading screen
         }
 
         public void HideLoading()
         {
-            Debug.Log("GAME READY");
+            //TODO: Hide loading screen
         }
 
         protected override void OnViewLeft()

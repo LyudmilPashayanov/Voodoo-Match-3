@@ -48,7 +48,7 @@ namespace Voodoo.UI.Presenters
             var floating = _floatingScoreFactory.Get();
             floating.gameObject.SetActive(true);
 
-            floating.Play(score, spawnPosition, _view.GetScorePosition(), _view.GetRootTransform() , view => _floatingScoreFactory.Release(view));
+            floating.Play(score, spawnPosition, _view.GetScorePosition(), _view.GetFloatingScoreParent() , view => _floatingScoreFactory.Release(view));
 
         }
         
