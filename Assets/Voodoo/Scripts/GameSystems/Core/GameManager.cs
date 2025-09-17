@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace Voodoo.Gameplay.Core
         private readonly Grid _grid;
         private readonly Spawner _spawner;
         private readonly ScoreManager _scoreManager;
+        private readonly PieceCatalog _pieceCatalog;
 
         private readonly Random _rng = new();
         
@@ -34,6 +36,7 @@ namespace Voodoo.Gameplay.Core
             _grid = new Grid(gridWidth, gridHeight);
             _scoreManager = new ScoreManager(scoreRulesConfig);
             _spawner = new Spawner(pieceCatalog);
+            _pieceCatalog = pieceCatalog;
             _timeForLevel = timeForLevel;
             _rng = new Random(123);
         }
@@ -41,7 +44,7 @@ namespace Voodoo.Gameplay.Core
         public void StartGame()
         {
             _ = FillGrid();
-            _ = ResolveCascadesAsync();
+            _ = ResolveMatchesAndCascadesAsync();
             _isRunning = true;
         }
 
@@ -83,11 +86,17 @@ namespace Voodoo.Gameplay.Core
         
         public async UniTask ClickPiece(int indexClicked)
         {
-            if (_currentClickedIndex == -1) // first click
+            if (_pieceCatalog.RoleOf(_grid.Tiles[indexClicked]) == PieceRole.Bomb)
+            {
+                List<MatchCluster> bombClusters = Matcher.TriggerBombClusters(_grid, _pieceCatalog, indexClicked, radius: 1);
+                await ResolveMatchesAndCascadesAsync(bombClusters);
+                _currentClickedIndex = -1;
+                return;
+            }
+
+            if (_currentClickedIndex == -1)
             {
                 _currentClickedIndex = indexClicked;
-                
-                // TODO: Check if it is a bomb piece.
             }
             else if (_currentClickedIndex == indexClicked) // player cancelling his click
             {
@@ -134,7 +143,7 @@ namespace Voodoo.Gameplay.Core
             }
             _currentClickedIndex = -1;
             await OnSwapCommittedAsync(indexA, indexB);
-            await ResolveCascadesAsync();
+            await ResolveMatchesAndCascadesAsync();
         }
         
         private async UniTask FillGrid()
@@ -160,14 +169,24 @@ namespace Voodoo.Gameplay.Core
             await UniTask.WhenAll(tasks);
         }
 
-        private async UniTask ResolveCascadesAsync(CancellationToken ct = default)
+        private async UniTask ResolveMatchesAndCascadesAsync(IReadOnlyList<MatchCluster> startMatches = null, CancellationToken ct = default)
         {
             int cascade = 0;
             bool hasMatches = true;
 
             while (hasMatches)
             {
-                IReadOnlyList<MatchCluster> clustersToDestroy = Matcher.FindAllMatches(_grid);
+                IReadOnlyList<MatchCluster> clustersToDestroy =  new List<MatchCluster>();
+                if (startMatches == null)
+                {
+                    clustersToDestroy = Matcher.FindAllMatches(_grid);
+                }
+                else
+                {
+                    clustersToDestroy = startMatches;
+                    startMatches = null;
+                }
+
                 if (clustersToDestroy.Count == 0)
                 {
                     hasMatches = false; // exit loop

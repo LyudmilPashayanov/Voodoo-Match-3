@@ -28,7 +28,7 @@ namespace Voodoo.Gameplay.Core
             return y * Width + x;
         } 
         
-        private void GetCoordsAt(int index, out int x, out int y)
+        public void GetCoordsAt(int index, out int x, out int y)
         {
             x = index % Width;
             y = index / Width;

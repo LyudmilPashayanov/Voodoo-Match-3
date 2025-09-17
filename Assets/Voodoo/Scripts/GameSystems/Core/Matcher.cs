@@ -103,6 +103,53 @@ namespace Voodoo.Gameplay.Core
             return hasRun;
         }
         
+        public static List<MatchCluster> TriggerBombClusters(Grid grid, PieceCatalog catalog, int startIndex, int radius)
+        {
+            var result = new List<MatchCluster>();
+            var visitedBombs = new HashSet<int>();
+            var queue = new Queue<int>();
+
+            queue.Enqueue(startIndex);
+
+            while (queue.Count > 0)
+            {
+                int center = queue.Dequeue();
+                if (!visitedBombs.Add(center))
+                    continue;
+
+                grid.GetCoordsAt(center, out int cx, out int cy);
+                var cleared = new List<int>();
+
+                for (int dy = -radius; dy <= radius; dy++)
+                for (int dx = -radius; dx <= radius; dx++)
+                {
+                    int nx = cx + dx;
+                    int ny = cy + dy;
+
+                    if (nx < 0 || nx >= grid.Width || ny < 0 || ny >= grid.Height)
+                        continue;
+
+                    int idx = grid.GetIndexAt(nx, ny);
+                    if (grid.IsIndexEmpty(idx))
+                        continue;
+
+                    cleared.Add(idx);
+
+                    if (catalog.RoleOf(grid.Tiles[idx]) == PieceRole.Bomb && !visitedBombs.Contains(idx))
+                    {
+                        queue.Enqueue(idx);
+                    }
+                }
+
+                if (cleared.Count > 0)
+                {
+                    result.Add(new MatchCluster(cleared, ClusterType.Bomb));
+                }
+            }
+
+            return result;
+        }
+        
         private static MatchCluster CreateClusterHorizontal(Grid grid, int endX, int y, int runLen)
         {
             HashSet<int> clusterIndeces = new();

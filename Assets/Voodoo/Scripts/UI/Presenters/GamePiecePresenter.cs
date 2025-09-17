@@ -64,16 +64,9 @@ namespace Voodoo.UI.Presenters
 
         private void PieceClicked()
         {
-            if (TypeDef.pieceType.Role == PieceRole.Bomb)
-            {
-                // Custom bomb behavior here (clear 3x3, trigger cascades, etc.)
-            }
-            else
-            {
-                _pieceClicked = !_pieceClicked;
-                View.EnableClickedState(_pieceClicked);
-                Clicked?.Invoke(_index);
-            }
+            _pieceClicked = !_pieceClicked;
+            View.EnableClickedState(_pieceClicked);
+            Clicked?.Invoke(_index);
         }
         
         private void PieceSwiped(Direction direction)

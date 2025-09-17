@@ -80,7 +80,8 @@ namespace Voodoo.Gameplay
                 BonusFor3 = scoreRulesConfig.bonusFor3,
                 BonusFor4 = scoreRulesConfig.bonusFor4,
                 BonusFor5 = scoreRulesConfig.bonusFor5,
-                CascadeBonusPerLevel = scoreRulesConfig.cascadeBonusPerLevel
+                CascadeBonusPerLevel = scoreRulesConfig.cascadeBonusPerLevel,
+                BombClearBonus = scoreRulesConfig.bombClearBonus
             };
         }
 

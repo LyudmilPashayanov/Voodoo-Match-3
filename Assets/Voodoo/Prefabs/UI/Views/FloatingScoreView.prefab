@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 2902466851229853784}
   - component: {fileID: 8807088839237318164}
   m_Layer: 5
-  m_Name: FloatingScore
+  m_Name: FloatingScoreView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

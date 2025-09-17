@@ -31,7 +31,7 @@ namespace Voodoo.UI
         public void StartGameplay()
         {
             ShowPanel(_gameplayView);
-            _gameplayPresenter.LoadGame(1);
+            _gameplayPresenter.LoadGame(2);
         }
         
         private void ShowPanel(UIPanelView panelToShow)

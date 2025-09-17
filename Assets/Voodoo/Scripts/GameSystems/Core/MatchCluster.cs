@@ -16,12 +16,15 @@ namespace Voodoo.Gameplay.Core
         /// Score value calculated and assigned by ScoreManager.
         /// </summary>
         public int ScoreValue { get; internal set; }
+        public ClusterType  ClusterType { get; internal set; }
         
-        public MatchCluster(IEnumerable<int> indices)
+        public MatchCluster(IEnumerable<int> indices, ClusterType clusterType = ClusterType.Normal)
         {
             Indices = new HashSet<int>(indices);
+            ClusterType = clusterType;
             ScoreValue = 0;
         }
+        
         public bool Overlaps(MatchCluster other)
         {
             return Indices.Overlaps(other.Indices);

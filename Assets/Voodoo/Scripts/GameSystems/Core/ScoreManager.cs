@@ -39,6 +39,19 @@ namespace Voodoo.Gameplay.Core
         }
 
         /// <summary>
+        /// Adds score for a bomb clear (special handling).
+        /// </summary>
+        public int AddBombClear(IReadOnlyList<int> clearedIndices, int cascadeLevel)
+        {
+            int baseScore = clearedIndices.Count * _rules.PointsPerTile;
+            baseScore += _rules.BombClearBonus;
+            baseScore += cascadeLevel * _rules.CascadeBonusPerLevel;
+
+            _currentScore += baseScore;
+            return baseScore;
+        }
+        
+        /// <summary>
         /// Pure scoring function for one cluster.
         /// </summary>
         private int CalculateClusterScore(int length, int cascadeLevel)

@@ -7,5 +7,6 @@ namespace Voodoo.Gameplay.Core
         public int BonusFor4;
         public int BonusFor5;
         public int CascadeBonusPerLevel;
+        public int BombClearBonus;
     }
 }
