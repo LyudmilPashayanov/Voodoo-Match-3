@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Voodoo.GameSystems.Utilities;
+using Voodoo.Gameplay.Core;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {
@@ -15,7 +15,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         private Vector2 _dragStart;
 
         public event Action OnClicked;
-        public event Action<SwipeDirection> OnSwiped;
+        public event Action<Direction> OnSwiped;
         
         public void EnableClickedState(bool enable)
         {
@@ -103,11 +103,11 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
 
             if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
             {
-                OnSwiped?.Invoke(delta.x > 0 ? SwipeDirection.Right : SwipeDirection.Left);
+                OnSwiped?.Invoke(delta.x > 0 ? Direction.Right : Direction.Left);
             }
             else
             {
-                OnSwiped?.Invoke(delta.y > 0 ? SwipeDirection.Up : SwipeDirection.Down);
+                OnSwiped?.Invoke(delta.y > 0 ? Direction.Up : Direction.Down);
             }
         }
         

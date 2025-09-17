@@ -19,6 +19,7 @@ namespace Voodoo
         [SerializeField] private UIManager _UIManager;
         [SerializeField] private GameRunner _gameRunner;
         [SerializeField] private LevelsConfig _levelsConfig;
+        [SerializeField] private ScoreRulesConfig _scoreRulesConfig;
         
         
         public void Start()
@@ -28,7 +29,7 @@ namespace Voodoo
             MainMenuPresenter mainMenuPresenter = new MainMenuPresenter(_UIManager.MainMenuView, _UIManager);
             GameplayPresenter gameplayPresenter = new GameplayPresenter(_UIManager.GameplayView, _UIManager);
             
-            gameplayPresenter.Init(_gameRunner, poolFactory, _levelsConfig);
+            gameplayPresenter.Init(_gameRunner, poolFactory, _levelsConfig, _scoreRulesConfig);
             
             _UIManager.Init(mainMenuPresenter, gameplayPresenter);
             _UIManager.ShowMainMenu();

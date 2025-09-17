@@ -23,6 +23,7 @@ namespace Voodoo.Gameplay
         
         private LevelConfig _set;
         private PieceTypeDefinition[] _availableTypes; // index == typeId used by GameManager
+        private ScoreRulesConfig _scoreRulesConfig;
 
         
         private PiecePool _pool;
@@ -39,10 +40,11 @@ namespace Voodoo.Gameplay
         public event Action GameOver;
         public event Action<int, int> GameLoaded;
         
-        public GameFlow(AssetReferenceT<LevelConfig> setReference, PiecePoolFactory piecePoolFactory)
+        public GameFlow(AssetReferenceT<LevelConfig> setReference, PiecePoolFactory piecePoolFactory, ScoreRulesConfig scoreRulesConfig)
         {
             _setReference = setReference;
             _poolFactory = piecePoolFactory;
+            _scoreRulesConfig = scoreRulesConfig;
         }
 
         /// <summary>
@@ -53,26 +55,44 @@ namespace Voodoo.Gameplay
             if (_gameManager != null) return;
             
             await PrepareAsync(ct);
-    
-            int w = _set.GridWidth;
-            int h = _set.GridHeight;
+            
             _availableTypes = _set.availableTypes;
             
             await UniTask.SwitchToMainThread(ct);
             
+            PieceCatalog catalog = GeneratePieceCatalog(_availableTypes);
+            ScoreRulesData scoreRulesData = GenerateScoreRulesData(_scoreRulesConfig);
+            
+            _gameManager = new GameManager(_set.GridWidth, _set.GridHeight, catalog, _set.timeForLevel, scoreRulesData);
+
+            WireModelEvents(_gameManager);
+    
+            GameLoaded?.Invoke(_set.GridWidth, _set.GridHeight);
+            
+            _gameManager.StartGame();
+        }
+
+        private ScoreRulesData GenerateScoreRulesData(ScoreRulesConfig scoreRulesConfig)
+        {
+            return new ScoreRulesData
+            {
+                PointsPerTile = scoreRulesConfig.pointsPerTile,
+                BonusFor3 = scoreRulesConfig.bonusFor3,
+                BonusFor4 = scoreRulesConfig.bonusFor4,
+                BonusFor5 = scoreRulesConfig.bonusFor5,
+                CascadeBonusPerLevel = scoreRulesConfig.cascadeBonusPerLevel
+            };
+        }
+
+        private PieceCatalog GeneratePieceCatalog(PieceTypeDefinition[] setToUse)
+        {
             List<PieceType> types = new List<PieceType>();
-            foreach (var type in _availableTypes)
+            foreach (var type in setToUse)
             {
                 types.Add(type.pieceType);
             }
             
-            PieceCatalog catalog = new PieceCatalog(types);
-            _gameManager = new GameManager(w, h, catalog, _set.timeForLevel);
-
-            WireModelEvents(_gameManager);
-    
-            GameLoaded?.Invoke(w, h);
-            _gameManager.StartGame();
+            return new PieceCatalog(types);
         }
         
         /// <summary>
@@ -199,7 +219,7 @@ namespace Voodoo.Gameplay
             _ = _gameManager?.ClickPiece(pieceClickedIndex);
         }
         
-        public void SwapPiece(int pieceClickedIndex, SwipeDirection direction)
+        public void SwapPiece(int pieceClickedIndex, Direction direction)
         {
             _ = _gameManager?.SwipePiece(pieceClickedIndex, direction);
         }

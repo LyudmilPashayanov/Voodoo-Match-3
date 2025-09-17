@@ -17,7 +17,7 @@ namespace Voodoo.UI.Presenters
 
         private int _currentClickedIndex = -1;
         public event Action<int> ClickPiece;
-        public event Action<int, SwipeDirection> SwapPiece;
+        public event Action<int, Direction> SwapPiece;
         
         public BoardPresenter(IBoardView view, IPiecePool pool)
         {
@@ -64,7 +64,7 @@ namespace Voodoo.UI.Presenters
             _view.EnableArrowOverlay(false);
         }
 
-        private void PieceSwiped(int indexSwiped, SwipeDirection direction)
+        private void PieceSwiped(int indexSwiped, Direction direction)
         {
             ResetClickState();
             SwapPiece?.Invoke(indexSwiped, direction);

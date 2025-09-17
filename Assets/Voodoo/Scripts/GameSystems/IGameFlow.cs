@@ -15,7 +15,7 @@ namespace Voodoo.Gameplay
         
         // Commands from Unity
         void PieceClicked(int pieceClickedIndex);
-        void SwapPiece(int pieceSwappedIndex, SwipeDirection direction);
+        void SwapPiece(int pieceSwappedIndex, Direction direction);
         void Pause();
         void Resume();
         void Tick(float deltaTime);

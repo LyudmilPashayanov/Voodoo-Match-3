@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Voodoo.GameSystems.Utilities;
+using Voodoo.Gameplay.Core;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {
@@ -15,7 +15,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         void Enable(bool enable);
         UniTask DestroyAnimationAsync();
         event Action OnClicked;
-        event Action<SwipeDirection> OnSwiped;
+        event Action<Direction> OnSwiped;
         void EnableClickedState(bool enable);
         UniTask AnimatePiece(Vector2 toLocation);
         void DestroyObject();

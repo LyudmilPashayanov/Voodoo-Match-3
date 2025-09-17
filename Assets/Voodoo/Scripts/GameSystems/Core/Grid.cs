@@ -51,13 +51,13 @@ namespace Voodoo.Gameplay.Core
         public void ClearAtIndex(int idx) => Tiles[idx] = -1;
         public bool IsIndexEmpty(int idx) => Tiles[idx] < 0;
 
-        public bool TryGetAdjacentIndex(int index, SwipeDirection direction, out int neighborIndex)
+        public bool TryGetAdjacentIndex(int index, Direction direction, out int neighborIndex)
         {
             GetCoordsAt(index, out int x, out int y);
 
             switch (direction)
             {
-                case SwipeDirection.Up:
+                case Direction.Up:
                     if (y + 1 < Height)
                     {
                         neighborIndex = GetIndexAt(x, y + 1);
@@ -65,7 +65,7 @@ namespace Voodoo.Gameplay.Core
                     }
                     break;
 
-                case SwipeDirection.Down:
+                case Direction.Down:
                     if (y - 1 >= 0)
                     {
                         neighborIndex = GetIndexAt(x, y - 1);
@@ -73,7 +73,7 @@ namespace Voodoo.Gameplay.Core
                     }
                     break;
 
-                case SwipeDirection.Left:
+                case Direction.Left:
                     if (x - 1 >= 0)
                     {
                         neighborIndex = GetIndexAt(x - 1, y);
@@ -81,7 +81,7 @@ namespace Voodoo.Gameplay.Core
                     }
                     break;
 
-                case SwipeDirection.Right:
+                case Direction.Right:
                     if (x + 1 < Width)
                     {
                         neighborIndex = GetIndexAt(x + 1, y);

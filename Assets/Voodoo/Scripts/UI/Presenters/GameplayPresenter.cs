@@ -17,6 +17,7 @@ namespace Voodoo.UI.Presenters
         private GameRunner _gameRunner;
         private PiecePoolFactory _piecePoolFactory;
         private LevelsConfig _levelsConfig;
+        private ScoreRulesConfig _scoreRulesConfig;
 
         public GameplayPresenter(GameplayView view, IUINavigator uiNavigator)
         {
@@ -24,11 +25,12 @@ namespace Voodoo.UI.Presenters
             _uiNavigator =  uiNavigator;
         }
 
-        public void Init(GameRunner gameRunner, PiecePoolFactory  piecePoolFactory, LevelsConfig levelsConfig)
+        public void Init(GameRunner gameRunner, PiecePoolFactory  piecePoolFactory, LevelsConfig levelsConfig, ScoreRulesConfig scoreRulesConfig)
         {
             _gameRunner = gameRunner;
             _piecePoolFactory = piecePoolFactory;
             _levelsConfig = levelsConfig;
+            _scoreRulesConfig = scoreRulesConfig;
         }
         
         public void LoadGame(int levelToLoad)
@@ -41,7 +43,7 @@ namespace Voodoo.UI.Presenters
                 throw new Exception("No level with id " + levelToLoad);
             }
             
-            _gameFlow = new GameFlow(entry.PieceSetRef, _piecePoolFactory);
+            _gameFlow = new GameFlow(entry.PieceSetRef, _piecePoolFactory, _scoreRulesConfig);
             
             _gameFlow.GameLoaded += GameLoaded;
             _gameFlow.GameOver += GameOver;

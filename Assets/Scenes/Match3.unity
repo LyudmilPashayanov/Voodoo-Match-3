@@ -2095,6 +2095,7 @@ MonoBehaviour:
   _UIManager: {fileID: 2011249549}
   _gameRunner: {fileID: 1203657478}
   _levelsConfig: {fileID: 11400000, guid: 18d4340a2d9a25e4fb7dfb8b3dd9729a, type: 2}
+  _scoreRulesConfig: {fileID: 11400000, guid: 864487fad51549248b2d5c839d56ca95, type: 2}
 --- !u!4 &1092457039
 Transform:
   m_ObjectHideFlags: 0

@@ -2,7 +2,6 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Gameplay.Core;
-using Voodoo.GameSystems.Utilities;
 using Voodoo.Scripts.UI.Views.Gameplay;
 
 namespace Voodoo.UI.Presenters
@@ -15,7 +14,7 @@ namespace Voodoo.UI.Presenters
 
         public PieceTypeDefinition TypeDef { get; private set; }
         public event Action<int> Clicked;
-        public event Action<int, SwipeDirection> Swiped;
+        public event Action<int, Direction> Swiped;
         public GamePiecePresenter(IGamePieceView view, PieceTypeDefinition type)
         {
             View = view;
@@ -71,7 +70,7 @@ namespace Voodoo.UI.Presenters
             }
         }
         
-        private void PieceSwiped(SwipeDirection direction)
+        private void PieceSwiped(Direction direction)
         {
             if (TypeDef.pieceType.Role == PieceRole.Bomb)
             {

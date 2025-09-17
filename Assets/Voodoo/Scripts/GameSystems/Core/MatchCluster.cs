@@ -4,12 +4,23 @@ namespace Voodoo.Gameplay.Core
 {
     public sealed class MatchCluster
     {
+        /// <summary>
+        /// The board indices that belong to this cluster.
+        /// </summary>
         public readonly HashSet<int> Indices;
+        /// <summary>
+        /// Number of tiles in this cluster.
+        /// </summary>
         public int Length => Indices.Count;
+        /// <summary>
+        /// Score value calculated and assigned by ScoreManager.
+        /// </summary>
+        public int ScoreValue { get; internal set; }
         
         public MatchCluster(IEnumerable<int> indices)
         {
             Indices = new HashSet<int>(indices);
+            ScoreValue = 0;
         }
         public bool Overlaps(MatchCluster other)
         {

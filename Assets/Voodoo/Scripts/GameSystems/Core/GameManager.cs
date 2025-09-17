@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay.Core
 {
@@ -20,20 +19,21 @@ namespace Voodoo.Gameplay.Core
         public event Action<int> OnTimeChanged;
         
         private readonly Grid _grid;
-        private readonly PieceCatalog _catalog;
         private readonly Spawner _spawner;
-        private readonly Random _rng = new();
-        private int _currentClickedIndex = -1; // -1 -> nothing is clicked
+        private readonly ScoreManager _scoreManager;
 
+        private readonly Random _rng = new();
+        
+        private int _currentClickedIndex = -1; // -1 -> nothing is clicked
         private float _timeForLevel;
         private int _lastBroadcastSecond = -1;
         private bool _isRunning;
         
-        public GameManager(int gridWidth, int gridHeight, PieceCatalog pieceCatalog, int timeForLevel)
+        public GameManager(int gridWidth, int gridHeight, PieceCatalog pieceCatalog, int timeForLevel, ScoreRulesData scoreRulesConfig)
         {
             _grid = new Grid(gridWidth, gridHeight);
-            _catalog = pieceCatalog;
-            _spawner = new Spawner(_catalog);
+            _scoreManager = new ScoreManager(scoreRulesConfig);
+            _spawner = new Spawner(pieceCatalog);
             _timeForLevel = timeForLevel;
             _rng = new Random(123);
         }
@@ -68,6 +68,7 @@ namespace Voodoo.Gameplay.Core
         public void EndGame()
         {
             _isRunning = false;
+            _scoreManager.Reset();
         }
 
         public void Resume()
@@ -106,11 +107,11 @@ namespace Voodoo.Gameplay.Core
             }
         }
         
-        public async UniTask SwipePiece(int indexClicked,  SwipeDirection direction)
+        public async UniTask SwipePiece(int indexSwiped, Direction direction)
         {
-            if(_grid.TryGetAdjacentIndex(indexClicked, direction, out int neighborIndex))
+            if(_grid.TryGetAdjacentIndex(indexSwiped, direction, out int neighborIndex))
             {
-                await TrySwap(indexClicked, neighborIndex);
+                await TrySwap(indexSwiped, neighborIndex);
             }
             else
             {
@@ -183,15 +184,12 @@ namespace Voodoo.Gameplay.Core
                 foreach (int idx in allCleared)
                     _grid.ClearAtIndex(idx);
 
+                _scoreManager.AddClusters(clustersToDestroy, cascade);
+                
                 await OnPiecesClearAsync(clustersToDestroy);
+                
+                OnScoreUpdated?.Invoke(_scoreManager.CurrentScore);
 
-                // scoring
-                foreach (var cluster in clustersToDestroy)
-                {
-                    int size = cluster.Indices.Count;
-                    int largestRun = size >= 5 ? 5 : size >= 4 ? 4 : 3;
-                    // _score.AddClear(size, largestRun, cascade);
-                }
 
                 List<(int from, int to)> moves = Gravity.Collapse(_grid);
                 if (moves.Count > 0)
