@@ -568,9 +568,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1432470495497497977, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
+      propertyPath: m_text
+      value: --
+      objectReference: {fileID: 0}
     - target: {fileID: 4624241358398568191, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
       propertyPath: m_Name
       value: UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8868495100727851420, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
+      propertyPath: m_text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8868495100727851420, guid: ef4075894839a214f87b3c175e20abf5, type: 3}
+      propertyPath: m_fontSize
+      value: 82.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

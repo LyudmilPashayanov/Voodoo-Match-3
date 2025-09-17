@@ -7,7 +7,6 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
 {
     public interface IGamePieceView
     {
-        void Bind(PieceTypeDefinition type);
         void SetSize(float size);
         void SetPosition(Vector2 localPosition);
         void SetParent(Transform parent);
@@ -17,7 +16,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         event Action OnClicked;
         event Action<Direction> OnSwiped;
         void EnableClickedState(bool enable);
-        UniTask AnimatePiece(Vector2 toLocation);
+        UniTask AnimatePiece(Vector2 toLocation, float animationDuration);
         void DestroyObject();
         void ResetState();
         

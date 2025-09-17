@@ -44,8 +44,7 @@ namespace Voodoo.Gameplay.Core
         public void StartGame()
         {
             _ = FillGrid();
-            //_ = ResolveMatchesAndCascadesAsync();
-            _isRunning = true;
+            ResumeTimer();
         }
 
         public void TickTime(float deltaTime)

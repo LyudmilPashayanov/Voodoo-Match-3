@@ -7,23 +7,21 @@ using Voodoo.Gameplay.Core;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {
-    public class GamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler,IDragHandler, IEndDragHandler
+    public class BombGamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler,IDragHandler, IEndDragHandler
     {
         private const float DESTROY_ANIMATION_DURATION = 0.5f;
-            
+        
         [SerializeField] private RectTransform _pieceTransform;
+        [SerializeField] private Animator _bodyAnimator;
+        [SerializeField] private RectTransform _bodyTransform;
+        [SerializeField] private RectTransform _destroyAnimation;
 
         private Vector2 _dragStart;
 
         public event Action OnClicked;
         public event Action<Direction> OnSwiped;
-        
-        public void EnableClickedState(bool enable)
-        {
-           // start animation
-        }
 
-        public UniTask AnimatePiece(Vector2 toLocation, float animationDuration)
+        public UniTask AnimatePiece(Vector2 toLocation,  float animationDuration)
         {
             return _pieceTransform
                 .DOLocalMove(toLocation, animationDuration)
@@ -38,14 +36,28 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
 
         public UniTask DestroyAnimationAsync()
         {
-            return _pieceTransform
+            _bodyAnimator.enabled = false;
+            _destroyAnimation.gameObject.SetActive(true);
+
+            UniTask anim1 = _destroyAnimation
+                .DOScale(new Vector2(3, 3), DESTROY_ANIMATION_DURATION)
+                .SetEase(Ease.InOutQuad)
+                .ToUniTask();
+
+            UniTask anim2 = _bodyTransform
                 .DOScale(Vector2.zero, DESTROY_ANIMATION_DURATION)
                 .SetEase(Ease.InOutQuad)
-                .ToUniTask(); 
+                .ToUniTask();
+
+            return UniTask.WhenAll(anim1, anim2);
+
         }
         
         public void ResetState()
         {
+            _destroyAnimation.gameObject.SetActive(false);
+            _bodyTransform.localScale= Vector2.one;
+            _bodyAnimator.enabled = true;
             Enable(true);
             _pieceTransform.localScale = Vector3.one;
         }
@@ -81,7 +93,10 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         {
             Destroy(gameObject);
         }
-
+        
+        public void EnableClickedState(bool enable)
+        { }
+        
         #region EventHandlers
 
         public void OnPointerClick(PointerEventData eventData)
@@ -112,6 +127,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         
         public void OnDrag(PointerEventData eventData)
         { }
+        
         #endregion
 
    

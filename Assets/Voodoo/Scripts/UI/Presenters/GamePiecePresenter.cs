@@ -8,6 +8,7 @@ namespace Voodoo.UI.Presenters
 {
     public class GamePiecePresenter : IDisposable
     {
+        private const float PIECE_MOVE_ANIMATION_DURATION = 0.5f;
         private IGamePieceView View { get; }
         private bool _pieceClicked = false;
         private int _index;
@@ -20,7 +21,7 @@ namespace Voodoo.UI.Presenters
         {
             View = view;
             TypeDef = type;
-            View.Bind(type);
+
             View.OnClicked += PieceClicked;
             View.OnSwiped += PieceSwiped;
         }
@@ -54,7 +55,7 @@ namespace Voodoo.UI.Presenters
         
         public async UniTask AnimatePiece(Vector2 toLocation)
         {
-           await View.AnimatePiece(toLocation);
+           await View.AnimatePiece(toLocation, PIECE_MOVE_ANIMATION_DURATION);
         }
 
         public void SetPieceSize(float pieceSize)
@@ -71,20 +72,12 @@ namespace Voodoo.UI.Presenters
         
         private void PieceSwiped(Direction direction)
         {
-            if (TypeDef.pieceType.Role == PieceRole.Bomb)
-            {
-                // Custom bomb behavior here (clear 3x3, trigger cascades, etc.)
-            }
-            else
-            {
-                Swiped?.Invoke(_index, direction);
-            }
+            Swiped?.Invoke(_index, direction);
         }
 
         public async UniTask DestroyAnimationAsync()
         {
             await View.DestroyAnimationAsync();
-            // Play destroyed animation
         }
         
         public void ReleaseAndReset(Transform newParent)

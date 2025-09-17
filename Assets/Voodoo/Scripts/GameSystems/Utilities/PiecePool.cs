@@ -36,7 +36,7 @@ namespace Voodoo.GameSystems.Utilities
                 for (int i = 0; i < count; i++)
                 {  
                     GameObject viewGo = UnityEngine.Object.Instantiate(prefab, _inactiveRoot);
-                    GamePieceView view = viewGo.GetComponent<GamePieceView>() ?? viewGo.AddComponent<GamePieceView>();
+                    IGamePieceView view = viewGo.GetComponent<IGamePieceView>();
                     GamePiecePresenter presenter = new GamePiecePresenter(view, type);
                     _free[type].Push(presenter);
                 }
@@ -63,7 +63,7 @@ namespace Voodoo.GameSystems.Utilities
             {
                 // pool is emtpy -> create extra from provided prefab
                 GameObject viewGo = UnityEngine.Object.Instantiate(_prefabs[type]);
-                GamePieceView view = viewGo.GetComponent<GamePieceView>() ?? viewGo.AddComponent<GamePieceView>();
+                IGamePieceView view = viewGo.GetComponent<IGamePieceView>();
                 presenter = new GamePiecePresenter(view, type);
             }
 

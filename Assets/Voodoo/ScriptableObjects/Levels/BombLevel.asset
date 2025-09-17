@@ -21,4 +21,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 130f8293c27e7414997d15defb8c859a, type: 2}
   GridWidth: 9
   GridHeight: 9
-  timeForLevel: 20
+  timeForLevel: 30
