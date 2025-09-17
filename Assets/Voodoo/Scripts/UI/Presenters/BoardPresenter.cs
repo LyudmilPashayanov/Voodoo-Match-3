@@ -123,7 +123,7 @@ namespace Voodoo.UI.Presenters
                 {
                     if (!_activePieces.TryGetValue(Idx, out piece))
                     {
-                        throw new Exception("Invalid index given inside Match Cluster!");
+                        continue;
                     }
                     
                     tasks.Add(ClearPiece(piece));

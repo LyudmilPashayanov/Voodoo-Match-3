@@ -232,12 +232,12 @@ namespace Voodoo.Gameplay
         
         public void Pause()
         {
-            _gameManager?.Pause();
+            _gameManager?.PauseTimer();
         }
 
         public void Resume()
         {
-            _gameManager?.Resume();
+            _gameManager?.ResumeTimer();
         }
         
         public void Dispose()

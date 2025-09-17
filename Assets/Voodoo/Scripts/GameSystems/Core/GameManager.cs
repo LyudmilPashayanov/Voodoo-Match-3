@@ -38,13 +38,13 @@ namespace Voodoo.Gameplay.Core
             _spawner = new Spawner(pieceCatalog);
             _pieceCatalog = pieceCatalog;
             _timeForLevel = timeForLevel;
-            _rng = new Random(123);
+            _rng = new Random();
         }
 
         public void StartGame()
         {
             _ = FillGrid();
-            _ = ResolveMatchesAndCascadesAsync();
+            //_ = ResolveMatchesAndCascadesAsync();
             _isRunning = true;
         }
 
@@ -74,12 +74,12 @@ namespace Voodoo.Gameplay.Core
             _scoreManager.Reset();
         }
 
-        public void Resume()
+        public void ResumeTimer()
         {
             _isRunning = true;
         }
 
-        public void Pause()
+        public void PauseTimer()
         {
             _isRunning = false;
         }
@@ -108,7 +108,9 @@ namespace Voodoo.Gameplay.Core
                 if (!Grid.AreAdjacent(previousClickedIndex, indexClicked, _grid.Width))
                 {
                     _currentClickedIndex = -1;
+                    PauseTimer();
                     await OnInvalidMoveAsync();
+                    ResumeTimer();
                     return;
                 }
                 
@@ -124,13 +126,16 @@ namespace Voodoo.Gameplay.Core
             }
             else
             {
+                PauseTimer();
                 _currentClickedIndex = -1;
                 await OnInvalidMoveAsync();
+                ResumeTimer();
             }
         }
 
         private async UniTask TrySwap(int indexA, int indexB)
         {
+            PauseTimer();
             _grid.Swap(indexA, indexB);
                 
             var matches = Matcher.FindAllMatches(_grid);
@@ -139,6 +144,7 @@ namespace Voodoo.Gameplay.Core
                 _grid.Swap(indexA, indexB); 
                 _currentClickedIndex = -1;
                 await OnNoMatchSwapAsync(indexA, indexB);
+                ResumeTimer();
                 return;
             }
             _currentClickedIndex = -1;
@@ -173,9 +179,9 @@ namespace Voodoo.Gameplay.Core
         {
             int cascade = 0;
             bool hasMatches = true;
-
             while (hasMatches)
             {
+                PauseTimer();
                 IReadOnlyList<MatchCluster> clustersToDestroy =  new List<MatchCluster>();
                 if (startMatches == null)
                 {
@@ -219,6 +225,8 @@ namespace Voodoo.Gameplay.Core
                 await FillGrid();
                 cascade++;
             }
+            
+            ResumeTimer();
         }
     }
 }
