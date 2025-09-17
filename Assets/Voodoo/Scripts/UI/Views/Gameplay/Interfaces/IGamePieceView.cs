@@ -1,0 +1,24 @@
+using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Voodoo.Scripts.GameSystems.Utilities;
+
+namespace Voodoo.Scripts.UI.Views.Gameplay.Interfaces
+{
+    public interface IGamePieceView
+    {
+        void Bind(PieceTypeDefinition type);
+        void SetSize(float size);
+        void SetPosition(Vector2 localPosition);
+        void SetParent(Transform parent);
+        void SetName(string name);
+        void Enable(bool enable);
+        UniTask DestroyAnimationAsync();
+        event Action OnClicked;
+        event Action<SwipeDirection> OnSwiped;
+        void EnableClickedState(bool enable);
+        UniTask AnimatePiece(Vector2 toLocation);
+        void DestroyObject();
+        void ResetState();
+    }
+}

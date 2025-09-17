@@ -10,13 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Levels
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Levels
   m_Data:
     m_SerializedData: []
   m_GUID: fa1a6d17c24ccd049b50d053236efb15
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 18d4340a2d9a25e4fb7dfb8b3dd9729a
+    m_Address: Assets/Voodoo/ScriptableObjects/Level_1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b4a7fed08eefbca40b3e0eb69ab95ee4
+    m_Address: Assets/Voodoo/ScriptableObjects/Level_2.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4e5c591be8d9ec240afe687638255120, type: 2}
   m_SchemaSet:

@@ -2,7 +2,7 @@ namespace Voodoo.UI
 {
     public interface IUINavigator
     {
-        public void ShowGameplay();
+        public void StartGameplay();
         public void ShowMainMenu();
     }
 }

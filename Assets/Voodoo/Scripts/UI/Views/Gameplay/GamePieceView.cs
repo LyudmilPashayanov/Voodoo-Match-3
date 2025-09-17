@@ -4,26 +4,10 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Voodoo.Scripts.GameSystems.Utilities;
+using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {
-    public interface IGamePieceView
-    {
-        void Bind(PieceTypeDefinition type);
-        void SetSize(float size);
-        void SetPosition(Vector2 localPosition);
-        void SetParent(Transform parent);
-        void SetName(string name);
-        void Enable(bool enable);
-        UniTask DestroyAnimationAsync();
-        event Action OnClicked;
-        event Action<SwipeDirection> OnSwiped;
-        void EnableClickedState(bool enable);
-        UniTask AnimatePiece(Vector2 toLocation);
-        void DestroyObject();
-        void ResetState();
-    }
-    
     public class GamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler,IDragHandler, IEndDragHandler
     {
         [SerializeField] private RectTransform _pieceTransform;

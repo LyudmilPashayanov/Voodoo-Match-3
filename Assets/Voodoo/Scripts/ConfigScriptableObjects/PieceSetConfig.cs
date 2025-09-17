@@ -11,5 +11,7 @@ namespace Voodoo.ConfigScriptableObjects
         public int GridWidth;
         [Tooltip("The Grid height")]
         public int GridHeight;
+        [Tooltip("The level allowed for this level")]
+        public int timeForLevel;
     }
 }

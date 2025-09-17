@@ -52,7 +52,7 @@ namespace Voodoo.Gameplay
             int w = _set.GridWidth;
             int h = _set.GridHeight;
             _availableTypes = _set.availableTypes;
-
+            
             await UniTask.SwitchToMainThread(ct);
             
             List<PieceType> types = new List<PieceType>();
@@ -62,7 +62,7 @@ namespace Voodoo.Gameplay
             }
             
             PieceCatalog catalog = new PieceCatalog(types);
-            _gameManager = new GameManager(w, h, catalog);
+            _gameManager = new GameManager(w, h, catalog, _set.timeForLevel);
 
             WireModelEvents(_gameManager);
     
@@ -253,14 +253,19 @@ namespace Voodoo.Gameplay
 
         public void PieceClicked(int pieceClickedIndex)
         {
-            _gameManager.ClickPiece(pieceClickedIndex);
+            _ = _gameManager.ClickPiece(pieceClickedIndex);
         }
         
         public void SwapPiece(int pieceClickedIndex, SwipeDirection direction)
         {
-            _gameManager.SwipePiece(pieceClickedIndex, direction);
+            _ = _gameManager.SwipePiece(pieceClickedIndex, direction);
         }
 
+        public void Tick(float deltaTime)
+        {
+            _gameManager.TickTime(deltaTime);
+        }
+        
         public void Pause()
         {
             _gameManager.Pause();
@@ -271,6 +276,9 @@ namespace Voodoo.Gameplay
             _gameManager.Resume();
         }
         
-        public void Dispose() => _ = EndGameAsync();
+        public void Dispose()
+        {
+            _ = EndGameAsync();
+        }
     }
 }

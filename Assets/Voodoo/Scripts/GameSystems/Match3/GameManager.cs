@@ -15,7 +15,7 @@ namespace Voodoo.Gameplay
         public Func<int, int, UniTask> OnSwapCommittedAsync { get; set; }
         public Func<UniTask> OnInvalidMoveAsync { get; set; }
         public Func<int, int, UniTask> OnNoMatchSwapAsync { get; set; }
-        public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; } // public event Action<IReadOnlyList<(int from, int to)>> OnGravityMoves; 
+        public Func<IReadOnlyList<(int from, int to)>, UniTask> OnGravityMovesAsync { get; set; }
 
         public event Action<int> OnScoreUpdated;
         public event Action OnGameOver;
@@ -25,23 +25,63 @@ namespace Voodoo.Gameplay
         private readonly PieceCatalog _catalog;
         private readonly Spawner _spawner;
         private readonly Random _rng = new();
-        private int _currentClickedIndex = -1; // if -1 - nothing is clicked
+        private int _currentClickedIndex = -1; // -1 -> nothing is clicked
+
+        private float _timeForLevel;
+        private int _lastBroadcastSecond = -1;
+        private bool _isRunning;
         
-        public GameManager(int gridWidth, int gridHeight, PieceCatalog pieceCatalog)
+        public GameManager(int gridWidth, int gridHeight, PieceCatalog pieceCatalog, int timeForLevel)
         {
             _grid = new Grid(gridWidth, gridHeight);
             _catalog = pieceCatalog;
             _spawner = new Spawner(_catalog);
+            _timeForLevel = timeForLevel;
             _rng = new Random(123);
         }
 
         public void StartGame()
         {
-            FillGrid();
-            ResolveCascadesAsync();
-            OnScoreUpdated?.Invoke(999);
+            _ = FillGrid();
+            _ = ResolveCascadesAsync();
+            _isRunning = true;
         }
 
+        public void TickTime(float deltaTime)
+        {
+            if (!_isRunning) return;
+
+            _timeForLevel -= deltaTime;
+            
+            int seconds = (int)Math.Ceiling(_timeForLevel);
+            if (seconds != _lastBroadcastSecond)
+            {
+                _lastBroadcastSecond = seconds;
+                OnTimeChanged?.Invoke(seconds);
+            }
+
+            if (_timeForLevel <= 0f)
+            {
+                _isRunning = false;
+                OnGameOver?.Invoke();
+            }
+        }
+        
+        public void EndGame()
+        {
+            _isRunning = false;
+        }
+
+        public void Resume()
+        {
+            _isRunning = true;
+        }
+
+        public void Pause()
+        {
+            _isRunning = false;
+        }
+        
         public async UniTask ClickPiece(int indexClicked)
         {
             if (_currentClickedIndex == -1) // first click
@@ -96,21 +136,6 @@ namespace Voodoo.Gameplay
             _currentClickedIndex = -1;
             await OnSwapCommittedAsync(indexA, indexB);
             await ResolveCascadesAsync();
-        }
-        
-        public void EndGame()
-        {
-            
-        }
-
-        public void Resume()
-        {
-            // Resuming the timer and game flow.
-        }
-
-        public void Pause()
-        {
-            // Pausing the timer and game flow.
         }
         
         private async UniTask FillGrid()
@@ -176,7 +201,7 @@ namespace Voodoo.Gameplay
                    await OnGravityMovesAsync(moves);
                 }
 
-               await FillGrid();
+                await FillGrid();
                 cascade++;
             }
         }

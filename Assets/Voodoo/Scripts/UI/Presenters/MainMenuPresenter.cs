@@ -16,7 +16,7 @@ namespace Voodoo.UI.Controllers
         
         private void OnPlayClicked()
         {
-            _uiNavigator.ShowGameplay();
+            _uiNavigator.StartGameplay();
         }
 
         private void OnQuitClicked()

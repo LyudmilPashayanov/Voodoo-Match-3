@@ -4,13 +4,13 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Scripts.GameSystems;
 using Voodoo.Scripts.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
 
 namespace Voodoo.UI.Controllers
 {
-    public class BoardPresenter // TODO : implement a IBoardView interface!!! 
+    public class BoardPresenter
     {
-        private readonly BoardView _view;
+        private readonly IBoardView _view;
         
         private readonly IPiecePool _pool;
         private readonly Dictionary<int, GamePiecePresenter> _activePieces = new Dictionary<int, GamePiecePresenter>();
@@ -19,7 +19,7 @@ namespace Voodoo.UI.Controllers
         public event Action<int> ClickPiece;
         public event Action<int, SwipeDirection> SwapPiece;
         
-        public BoardPresenter(BoardView view, IPiecePool pool)
+        public BoardPresenter(IBoardView view, IPiecePool pool)
         {
             _view = view;
             _pool = pool;
@@ -137,7 +137,7 @@ namespace Voodoo.UI.Controllers
                 var fromPos = _view.GetBoardPositionBasedOnIndex(fromIndex);
                 var toPos   = _view.GetBoardPositionBasedOnIndex(toIndex);
 
-                pieceA.AnimatePiece(toPos);
+                _ = pieceA.AnimatePiece(toPos);
                 pieceA.SetIndex(toIndex);
                 pieceA.SetName(toIndex.ToString());
 
@@ -158,10 +158,10 @@ namespace Voodoo.UI.Controllers
                 var fromPos = _view.GetBoardPositionBasedOnIndex(fromIndex);
                 var toPos = _view.GetBoardPositionBasedOnIndex(toIndex);
                 
-                pieceA.AnimatePiece(toPos);
+                _ = pieceA.AnimatePiece(toPos);
                 await pieceB.AnimatePiece(fromPos);
                 
-                pieceA.AnimatePiece(fromPos);
+                _ = pieceA.AnimatePiece(fromPos);
                 await pieceB.AnimatePiece(toPos);
             }
 

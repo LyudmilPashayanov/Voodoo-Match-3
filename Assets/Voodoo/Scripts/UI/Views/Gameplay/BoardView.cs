@@ -3,10 +3,11 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {
-    public class BoardView : MonoBehaviour
+    public class BoardView : MonoBehaviour, IBoardView
     {
         [SerializeField] private RectTransform _boardTransform;
         [SerializeField] private RectTransform _inputBlocker;
@@ -32,6 +33,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
                 -(_boardWidth - 1) * (_spriteSize + 0) * 0.5f,
                 -(_boardWidth - 1) * (_spriteSize + 0) * 0.5f
             );
+            _boardTransform.gameObject.SetActive(true);
         }
 
         public void BlockInput(bool enable)
@@ -77,6 +79,12 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
                 .DOShakePosition(0.3f, new Vector3(10f, 0f, 0f), 15, 90)
                 .SetEase(Ease.OutQuad)
                 .ToUniTask();
+        }
+
+        public void CleanAndReset()
+        {
+            BlockInput(false);
+            EnableArrowOverlay(false);
         }
     }
 }

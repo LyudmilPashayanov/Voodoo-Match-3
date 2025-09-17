@@ -6,12 +6,15 @@ namespace Voodoo.UI.Panels
     public class GameplayView: UIPanelView
     {
         [SerializeField] private BoardView _boardView;
+        [SerializeField] private HUDView _HUDView;
 
         public BoardView BoardView => _boardView;
+        public HUDView HUDView => _HUDView;
         
         protected override void OnViewLeft()
         {
-            // Cleaning when the view is left
+            _boardView.CleanAndReset();
+            _HUDView.CleanAndReset();
         }
 
         public void ShowLoading()

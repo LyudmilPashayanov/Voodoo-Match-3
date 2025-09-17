@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Scripts.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.Scripts.UI.Views.Gameplay.Interfaces;
 
 namespace Voodoo.UI.Controllers
 {
@@ -34,6 +34,7 @@ namespace Voodoo.UI.Controllers
             View.SetPosition(localLocation);
             View.Enable(true); 
         } 
+        
         public void SetParent(Transform parent)
         {
             View.SetParent(parent);

@@ -13,11 +13,12 @@ namespace Voodoo.Gameplay
         UniTask StartGameAsync(CancellationToken ct = default);
         UniTask EndGameAsync(CancellationToken ct = default);
         
-        // Commands from UI
+        // Commands from Unity
         void PieceClicked(int pieceClickedIndex);
         void SwapPiece(int pieceSwappedIndex, SwipeDirection direction);
         void Pause();
         void Resume();
+        void Tick(float deltaTime);
 
         // Events (pure data, no Unity types)
         Func<int, PieceTypeDefinition,UniTask> PieceSpawnAsync { get; set; }
