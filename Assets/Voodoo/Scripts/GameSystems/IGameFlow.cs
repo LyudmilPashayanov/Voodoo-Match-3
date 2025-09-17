@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using Voodoo.ConfigScriptableObjects;
 using Voodoo.Gameplay.Core;
 using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
 {
+    /// <summary>
+    /// The main contract between the engine systems representation of the Match-3 game and the (<see cref="GameManager"/>).
+    /// </summary>
     public interface IGameFlow
     { 
         IPiecePool Pool { get; }

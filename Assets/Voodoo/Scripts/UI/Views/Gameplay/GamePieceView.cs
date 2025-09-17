@@ -4,8 +4,9 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Voodoo.Gameplay.Core;
+using Voodoo.UI.Views.Interfaces;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay
+namespace Voodoo.UI.Views.Gameplay
 {
     public class GamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler,IDragHandler, IEndDragHandler
     {

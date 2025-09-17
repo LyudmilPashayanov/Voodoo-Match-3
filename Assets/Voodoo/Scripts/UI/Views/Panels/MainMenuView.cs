@@ -16,8 +16,6 @@ namespace Voodoo.UI.Panels
         }
         
         protected override void OnViewLeft()
-        {
-            // cleaning when view is left
-        }
+        { }
     }
 }

@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Gameplay.Core;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay
+namespace Voodoo.UI.Views.Interfaces
 {
     public interface IGamePieceView
     {

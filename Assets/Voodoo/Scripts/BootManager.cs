@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Voodoo.ConfigScriptableObjects;
-using Voodoo.Gameplay;
 using Voodoo.GameSystems.Utilities;
 using Voodoo.UI;
 using Voodoo.UI.Presenters;
@@ -11,8 +9,7 @@ namespace Voodoo
     /// <summary>
     /// This class is the first thing that runs in the game.
     /// It is responsible to create the classes in the required order
-    /// and if needed to inject them with one another, so that they can
-    /// hold the references they need.
+    /// and if needed to inject them with one another.
     /// /// </summary>
     public class BootManager : MonoBehaviour
     {
@@ -20,7 +17,6 @@ namespace Voodoo
         [SerializeField] private GameRunner _gameRunner;
         [SerializeField] private LevelsConfig _levelsConfig;
         [SerializeField] private ScoreRulesConfig _scoreRulesConfig;
-        
         
         public void Start()
         {

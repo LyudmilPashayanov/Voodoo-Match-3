@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Represents a group of matched tiles on the board.
+    /// </summary>
     public sealed class MatchCluster
     {
         /// <summary>

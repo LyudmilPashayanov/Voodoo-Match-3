@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.UI.Views.Gameplay;
 
 namespace Voodoo.GameSystems.Utilities
 {

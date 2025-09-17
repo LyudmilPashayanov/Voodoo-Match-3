@@ -3,7 +3,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay
+namespace Voodoo.UI.Views.Gameplay
 {
     public class FloatingScoreView : MonoBehaviour
     {

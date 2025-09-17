@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Voodoo.ConfigScriptableObjects;
@@ -11,6 +10,11 @@ using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay
 {
+    /// <summary>
+    /// High-level coordinator for a Match-3 session.  
+    /// Acts as the bridge between game logic (<see cref="GameManager"/>) and Unity systems
+    /// (Addressables, pooling, UI presenters).
+    /// </summary>
     public sealed class GameFlow : IGameFlow, IDisposable
     {
         private GameManager _gameManager;

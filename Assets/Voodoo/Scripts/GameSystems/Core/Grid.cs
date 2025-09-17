@@ -1,8 +1,10 @@
 using System;
-using Voodoo.GameSystems.Utilities;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Represents a square grid in a 1D array for a Match-3 game.
+    /// </summary>
     public class Grid
     {
         public readonly int Width;

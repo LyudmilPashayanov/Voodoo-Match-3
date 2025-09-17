@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Responsible for selecting random piece types to spawn on the board.
+    /// Uses weighted probabilities defined in <see cref="PieceCatalog"/> 
+    /// to ensure controlled randomness.
+    /// </summary>
     public sealed class Spawner
     {
         private readonly int[] _availableIds;

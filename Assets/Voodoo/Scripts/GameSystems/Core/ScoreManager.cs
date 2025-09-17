@@ -2,6 +2,12 @@ using System.Collections.Generic;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Handles scoring logic for the Match-3 game.
+    /// Calculates and accumulates points from cleared clusters,
+    /// cascades, and special actions (e.g. bomb clears) based on
+    /// <see cref="ScoreRulesData"/>. 
+    /// </summary>
     public sealed class ScoreManager
     {
         

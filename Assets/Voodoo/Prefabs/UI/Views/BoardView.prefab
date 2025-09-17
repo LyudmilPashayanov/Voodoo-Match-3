@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boardTransform: {fileID: 599676889528083520}
+  _gridImage: {fileID: 7187153916420663675}
   _inputBlocker: {fileID: 3623684488569174028}
   _arrowsMoveOverlay: {fileID: 2170642967151697452}
   _arrowsTransform:

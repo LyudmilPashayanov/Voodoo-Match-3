@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Helper class which applies gravity to a 1D array representing a grid for a Match-3 game.
+    /// </summary>
     public static class Gravity
     {
         public static List<(int from,int to)> Collapse(Grid grid)

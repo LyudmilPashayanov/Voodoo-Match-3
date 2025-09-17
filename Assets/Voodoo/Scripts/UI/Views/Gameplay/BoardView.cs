@@ -1,15 +1,19 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using Voodoo.UI.Views.Interfaces;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay
+namespace Voodoo.UI.Views.Gameplay
 {
     public class BoardView : MonoBehaviour, IBoardView
     {
+        private const float INVALID_MOVE_SHAKE_DURATION = 0.3f;
+        private const float INVALID_MOVE_SHAKE_FORCE = 10f;
+        
         [SerializeField] private RectTransform _boardTransform;
+        [SerializeField] private RawImage _gridImage;
         [SerializeField] private RectTransform _inputBlocker;
         [SerializeField] private RectTransform _arrowsMoveOverlay;
         [SerializeField] private List<RectTransform> _arrowsTransform;
@@ -21,18 +25,12 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         public void InitializeBoard(int gridWidth, int gridHeight)
         {
             _boardWidth = gridWidth;
-            _boardTransform.GetComponent<RawImage>().uvRect = new Rect(0, 0, gridWidth, gridHeight);
+            _gridImage.uvRect = new Rect(0, 0, gridWidth, gridHeight);
             _spriteSize = _boardTransform.rect.width / _boardWidth;
-            _arrowsMoveOverlay.sizeDelta = new Vector2(_spriteSize,_spriteSize);
-            foreach (RectTransform arrow in _arrowsTransform)
-            {
-                arrow.sizeDelta = new Vector2(_spriteSize/2, _spriteSize/2);
-            }
-        
-            _origin = new Vector2(
-                -(_boardWidth - 1) * (_spriteSize + 0) * 0.5f,
-                -(_boardWidth - 1) * (_spriteSize + 0) * 0.5f
-            );
+
+            SetArrowsOverlaySize();
+            GetBoardOriginVector();
+            
             _boardTransform.gameObject.SetActive(true);
         }
 
@@ -51,7 +49,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
             int x = index % _boardWidth;
             int y = index / _boardWidth;
 
-            float cell = _spriteSize + 0;
+            float cell = _spriteSize;
             float posX = x * cell;
             float posY = y * cell;
 
@@ -76,7 +74,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         public UniTask InvalidMoveAnimation()
         {
             return _boardTransform
-                .DOShakePosition(0.3f, new Vector3(10f, 0f, 0f), 15, 90)
+                .DOShakePosition(INVALID_MOVE_SHAKE_DURATION, new Vector3(INVALID_MOVE_SHAKE_FORCE, 0f, 0f), 15, 90)
                 .SetEase(Ease.OutQuad)
                 .ToUniTask();
         }
@@ -85,6 +83,21 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         {
             BlockInput(false);
             EnableArrowOverlay(false);
+        }
+        
+        private void GetBoardOriginVector()
+        {
+            float offset = (_boardWidth - 1) * _spriteSize * 0.5f;
+            _origin = new Vector2(-offset, -offset);
+        }
+        
+        private void SetArrowsOverlaySize()
+        {
+            _arrowsMoveOverlay.sizeDelta = new Vector2(_spriteSize,_spriteSize);
+            foreach (RectTransform arrow in _arrowsTransform)
+            {
+                arrow.sizeDelta = new Vector2(_spriteSize / 2, _spriteSize / 2);
+            }
         }
     }
 }

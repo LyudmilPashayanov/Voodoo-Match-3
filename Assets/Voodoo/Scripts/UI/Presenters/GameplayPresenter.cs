@@ -6,6 +6,10 @@ using Voodoo.UI.Panels;
 
 namespace Voodoo.UI.Presenters
 {
+    /// <summary>
+    /// Acts as the glue between the rendering/UI layer and the underlying game state running in the GameManager.
+    /// Presenter responsible for managing the visual state of the Match-3 game.  
+    /// </summary>
     public class GameplayPresenter : IDisposable 
     {
         private readonly IUINavigator _uiNavigator;

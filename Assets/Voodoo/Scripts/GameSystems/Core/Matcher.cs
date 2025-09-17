@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Finds matching tiles in a 1D grid and returns them as a <see cref="MatchCluster"/>.
+    /// </summary>
     public static class Matcher
     {
         public static IReadOnlyList<MatchCluster> FindAllMatches(Grid grid, bool exitEarly = false)
@@ -40,7 +43,6 @@ namespace Voodoo.Gameplay.Core
                     }
                 }
 
-                // finalize row
                 if (runLen >= 3)
                 {
                     MatchCluster newCluster = CreateClusterHorizontal(grid, w - 1, y, runLen);
@@ -77,7 +79,6 @@ namespace Voodoo.Gameplay.Core
                     }
                 }
 
-                // finalize column
                 if (runLen >= 3)
                 {
                     MatchCluster newCluster = CreateClusterVertical(grid, x, h - 1, runLen);
@@ -91,7 +92,7 @@ namespace Voodoo.Gameplay.Core
         /// <summary>
         /// Used by spawner: check if placing typeId at (x,y) would immediately create a match.
         /// </summary>
-        public static bool IsResultingInMatch(Grid grid,int indexToReplace, int typeIdToCheck)
+        public static bool IsResultingInMatch(Grid grid, int indexToReplace, int typeIdToCheck)
         {
             sbyte original = grid.Tiles[indexToReplace];
 
@@ -105,9 +106,9 @@ namespace Voodoo.Gameplay.Core
         
         public static List<MatchCluster> TriggerBombClusters(Grid grid, PieceCatalog catalog, int startIndex, int radius)
         {
-            var result = new List<MatchCluster>();
-            var visitedBombs = new HashSet<int>();
-            var queue = new Queue<int>();
+            List<MatchCluster> result = new List<MatchCluster>();
+            HashSet<int> visitedBombs = new HashSet<int>();
+            Queue<int> queue = new Queue<int>();
 
             queue.Enqueue(startIndex);
 
@@ -115,10 +116,12 @@ namespace Voodoo.Gameplay.Core
             {
                 int center = queue.Dequeue();
                 if (!visitedBombs.Add(center))
+                {
                     continue;
+                }
 
                 grid.GetCoordsAt(center, out int cx, out int cy);
-                var cleared = new List<int>();
+                List<int> cleared = new List<int>();
 
                 for (int dy = -radius; dy <= radius; dy++)
                 for (int dx = -radius; dx <= radius; dx++)
@@ -127,11 +130,15 @@ namespace Voodoo.Gameplay.Core
                     int ny = cy + dy;
 
                     if (nx < 0 || nx >= grid.Width || ny < 0 || ny >= grid.Height)
+                    {
                         continue;
+                    }
 
                     int idx = grid.GetIndexAt(nx, ny);
                     if (grid.IsIndexEmpty(idx))
+                    {
                         continue;
+                    }
 
                     cleared.Add(idx);
 
@@ -152,12 +159,12 @@ namespace Voodoo.Gameplay.Core
         
         private static MatchCluster CreateClusterHorizontal(Grid grid, int endX, int y, int runLen)
         {
-            HashSet<int> clusterIndeces = new();
+            HashSet<int> clusterIndexes = new();
             for (int k = 0; k < runLen; k++)
             {
-                clusterIndeces.Add(grid.GetIndexAt(endX - k, y));
+                clusterIndexes.Add(grid.GetIndexAt(endX - k, y));
             }
-            return new MatchCluster(clusterIndeces);
+            return new MatchCluster(clusterIndexes);
         }
 
         private static MatchCluster CreateClusterVertical(Grid grid, int x, int endY, int runLen)
@@ -171,7 +178,7 @@ namespace Voodoo.Gameplay.Core
         }
         
         /// <summary>
-        /// See if new cluster overlaps an existing one, otherwise just adds it.
+        /// See if a new cluster overlaps an existing one, otherwise just adds it.
         /// </summary>
         private static void AddOrMergeCluster(List<MatchCluster> clusters, MatchCluster newCluster)
         {

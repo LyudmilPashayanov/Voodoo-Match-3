@@ -17,6 +17,6 @@ namespace Voodoo.ConfigScriptableObjects
         public int cascadeBonusPerLevel = 50;
 
         [Header("Specials")]
-        public int bombClearBonus = 200; // example, expand later
+        public int bombClearBonus = 200;
     }
 }

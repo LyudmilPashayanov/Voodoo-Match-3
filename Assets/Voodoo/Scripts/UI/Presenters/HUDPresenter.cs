@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using Voodoo.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.UI.Views.Interfaces;
 
 namespace Voodoo.UI.Presenters
 {

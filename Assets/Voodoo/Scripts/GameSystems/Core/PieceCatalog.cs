@@ -5,6 +5,7 @@ namespace Voodoo.Gameplay.Core
 {
     /// <summary>
     /// Base type representation of the pieces available for a level.
+    /// Used in the <see cref="Spawner"/>.
     /// </summary>
     public sealed class PieceCatalog
     {

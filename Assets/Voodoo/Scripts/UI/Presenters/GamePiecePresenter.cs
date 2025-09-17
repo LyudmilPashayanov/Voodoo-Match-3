@@ -1,11 +1,15 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Voodoo.ConfigScriptableObjects;
 using Voodoo.Gameplay.Core;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.UI.Views.Interfaces;
 
 namespace Voodoo.UI.Presenters
 {
+    /// <summary>
+    /// Presenter responsible for managing the visual state of the Match-3 piece on the board.  
+    /// </summary>
     public class GamePiecePresenter : IDisposable
     {
         private const float PIECE_MOVE_ANIMATION_DURATION = 0.5f;
@@ -85,18 +89,18 @@ namespace Voodoo.UI.Presenters
             View.SetParent(newParent);
             View.ResetState();
         }
-
-        public void Dispose()
-        {
-            View.OnClicked -= PieceClicked;
-           // View.OnSwiped -= PieceSwiped; // if you have swipes too
-            View.DestroyObject();
-            TypeDef = null;
-        }
-
+        
         public void SetName(string name)
         {
             View.SetName(name);
+        }
+        
+        public void Dispose()
+        {
+            View.OnClicked -= PieceClicked;
+            View.OnSwiped -= PieceSwiped;
+            View.DestroyObject();
+            TypeDef = null;
         }
     }
 }

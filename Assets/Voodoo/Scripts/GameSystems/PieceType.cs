@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using Voodoo.Gameplay.Core;
 
-namespace Voodoo.Gameplay.Core
+namespace Voodoo.Gameplay
 {
     [Serializable]
     public struct PieceType

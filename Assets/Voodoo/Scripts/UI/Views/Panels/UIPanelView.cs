@@ -5,22 +5,16 @@ using Sequence = DG.Tweening.Sequence;
 
 namespace Voodoo.UI.Panels
 {
+    /// <summary>
+    /// Base class for UI panels in the game.  
+    /// </summary>
     public abstract class UIPanelView : MonoBehaviour
     {
-        #region Variables
-
-        // Maybe in the future I need access to the UIManager?
-        //protected UIManager Owner;
-        
         [SerializeField] private CanvasGroup _canvasGroup;
         private Sequence _showAnimation;
         private Sequence _hideAnimation;
         public event Action OnHideComplete;
         public event Action OnShowComplete;
-
-        #endregion
-
-        #region Functionality
         
         protected void Awake()
         {
@@ -110,13 +104,7 @@ namespace Voodoo.UI.Panels
             OnViewLeft();
             OnHideComplete?.Invoke();
         }
-
-        #endregion
-
-        #region Event Handlers
-
+        
         protected abstract void OnViewLeft();
-
-        #endregion
     }
 }

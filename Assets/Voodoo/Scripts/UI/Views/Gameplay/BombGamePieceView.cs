@@ -4,17 +4,21 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Voodoo.Gameplay.Core;
+using Voodoo.UI.Views.Interfaces;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay
+namespace Voodoo.UI.Views.Gameplay
 {
     public class BombGamePieceView : MonoBehaviour, IGamePieceView,  IPointerClickHandler, IBeginDragHandler,IDragHandler, IEndDragHandler
     {
         private const float DESTROY_ANIMATION_DURATION = 0.5f;
+        private const int SWIPE_MAGNITUDE_THRESHOLD = 50;
         
         [SerializeField] private RectTransform _pieceTransform;
         [SerializeField] private Animator _bodyAnimator;
         [SerializeField] private RectTransform _bodyTransform;
         [SerializeField] private RectTransform _destroyAnimation;
+
+        private Vector2 _bombAnimationGrowScale = new Vector2(3, 3);
 
         private Vector2 _dragStart;
 
@@ -40,7 +44,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
             _destroyAnimation.gameObject.SetActive(true);
 
             UniTask anim1 = _destroyAnimation
-                .DOScale(new Vector2(3, 3), DESTROY_ANIMATION_DURATION)
+                .DOScale(_bombAnimationGrowScale, DESTROY_ANIMATION_DURATION)
                 .SetEase(Ease.InOutQuad)
                 .ToUniTask();
 
@@ -50,7 +54,6 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
                 .ToUniTask();
 
             return UniTask.WhenAll(anim1, anim2);
-
         }
         
         public void ResetState()
@@ -113,7 +116,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         {
             Vector2 delta = eventData.position - _dragStart;
             
-            if (delta.magnitude < 50f) return;
+            if (delta.magnitude < SWIPE_MAGNITUDE_THRESHOLD) return;
 
             if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
             {
@@ -129,7 +132,5 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         { }
         
         #endregion
-
-   
     }
 }

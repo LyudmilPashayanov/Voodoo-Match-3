@@ -1,11 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Core orchestration class for a Match-3 game.
+    /// 
+    /// Manages the game board, piece spawning, player input (clicks and swipes),
+    /// match detection, special piece handling (e.g. bombs), cascades, gravity,
+    /// and scoring. Acts as the central state machine driving gameplay flow.
+    /// /// </summary>
     public class GameManager
     {
         public Func<int, int, UniTask> OnPieceSpawnAsync { get; set; }

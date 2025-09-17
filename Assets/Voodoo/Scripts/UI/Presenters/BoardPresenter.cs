@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Voodoo.ConfigScriptableObjects;
 using Voodoo.Gameplay.Core;
 using Voodoo.GameSystems.Utilities;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.UI.Views.Interfaces;
 
 namespace Voodoo.UI.Presenters
 {
+    /// <summary>
+    /// Presenter responsible for managing the visual state of the Match-3 board.  
+    /// </summary>
     public class BoardPresenter : IDisposable
     {
         private readonly IBoardView _view;

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Voodoo.Scripts.UI.Views.Gameplay;
+using Voodoo.ConfigScriptableObjects;
 using Voodoo.UI.Presenters;
+using Voodoo.UI.Views.Interfaces;
 
 namespace Voodoo.GameSystems.Utilities
 {

@@ -2,8 +2,9 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Voodoo.UI.Views.Interfaces;
 
-namespace Voodoo.Scripts.UI.Views.Gameplay
+namespace Voodoo.UI.Views.Gameplay
 {
     public class HUDView: MonoBehaviour, IHUDView
     {

@@ -1,5 +1,8 @@
 namespace Voodoo.Gameplay.Core
 {
+    /// <summary>
+    /// Used in the  <see cref="ScoreManager"/> to decide what score and bonuses to give for different matches.
+    /// </summary>
     public struct ScoreRulesData
     {
         public int PointsPerTile;
