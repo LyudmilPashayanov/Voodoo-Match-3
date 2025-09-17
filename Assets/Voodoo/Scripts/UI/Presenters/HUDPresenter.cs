@@ -1,4 +1,6 @@
 using System;
+using UnityEngine;
+using Voodoo.GameSystems.Utilities;
 using Voodoo.Scripts.UI.Views.Gameplay;
 
 namespace Voodoo.UI.Presenters
@@ -6,6 +8,8 @@ namespace Voodoo.UI.Presenters
     public class HUDPresenter : IDisposable
     {
         IHUDView _view;
+        
+        private FloatingScoreFactory _floatingScoreFactory;
 
         public event Action GamePaused;
         public event Action GameResumed;
@@ -17,6 +21,11 @@ namespace Voodoo.UI.Presenters
             _view.PauseButtonPressed += PauseGame;
             _view.ResumeButtonPressed += ResumeGame;
             _view.QuitToMenuButtonPressed += QuitGameToMenu;
+        }
+        
+        public void InitializeHUD(FloatingScoreFactory floatingScoreFactory)
+        {
+            _floatingScoreFactory = floatingScoreFactory;
         }
         
         public void ShowEndScreen()
@@ -34,6 +43,15 @@ namespace Voodoo.UI.Presenters
             _view.UpdateScore(score);
         }
 
+        public void ShowFloatingScoreText(int score, Vector2 spawnPosition)
+        {
+            var floating = _floatingScoreFactory.Get();
+            floating.gameObject.SetActive(true);
+
+            floating.Play(score, spawnPosition, _view.GetScorePosition(), _view.GetRootTransform() , view => _floatingScoreFactory.Release(view));
+
+        }
+        
         private void PauseGame()
         {
             _view.ShowPauseMenu(true);

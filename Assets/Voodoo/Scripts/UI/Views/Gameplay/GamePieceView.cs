@@ -63,12 +63,16 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         public void SetPosition(Vector2 localPosition)
         {
             transform.localPosition = localPosition;
+        } 
+        
+        public Vector2 GetWorldPosition()
+        {
+            return transform.position;
         }
 
         public void SetName(string name)
         {
             gameObject.name = name;
-
         }
         
         public void SetSize(float size)

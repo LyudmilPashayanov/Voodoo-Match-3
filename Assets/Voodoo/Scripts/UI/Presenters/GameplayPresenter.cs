@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using Voodoo.ConfigScriptableObjects;
 using Voodoo.Gameplay;
 using Voodoo.GameSystems.Utilities;
@@ -18,6 +17,7 @@ namespace Voodoo.UI.Presenters
         private PiecePoolFactory _piecePoolFactory;
         private LevelsConfig _levelsConfig;
         private ScoreRulesConfig _scoreRulesConfig;
+        private FloatingScoreFactory _floatingScoreFactory;
 
         public GameplayPresenter(GameplayView view, IUINavigator uiNavigator)
         {
@@ -106,11 +106,16 @@ namespace Voodoo.UI.Presenters
         private void InitializeHUD()
         {
             _HUDPresenter = new HUDPresenter(_view.HUDView);
-            
+
+            _floatingScoreFactory ??= new FloatingScoreFactory(_view.FloatingScoreViewView);
+
+            _HUDPresenter.InitializeHUD(_floatingScoreFactory);
             _gameFlow.TimeChanged += _HUDPresenter.UpdateTime;
             _gameFlow.ScoreChanged += _HUDPresenter.UpdateScore;
             _gameFlow.GameOver += _HUDPresenter.ShowEndScreen;
 
+            _boardPresenter.ScorePopupRequested += _HUDPresenter.ShowFloatingScoreText;
+            
             _HUDPresenter.GamePaused += PauseGame;
             _HUDPresenter.GameResumed += ResumeGame;
             _HUDPresenter.QuitToMenu += QuitGameplay;

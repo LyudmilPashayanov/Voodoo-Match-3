@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Voodoo.Gameplay.Core;
@@ -18,7 +19,8 @@ namespace Voodoo.UI.Presenters
         private int _currentClickedIndex = -1;
         public event Action<int> ClickPiece;
         public event Action<int, Direction> SwapPiece;
-        
+        public event Action<int, Vector2> ScorePopupRequested;
+
         public BoardPresenter(IBoardView view, IPiecePool pool)
         {
             _view = view;
@@ -69,7 +71,12 @@ namespace Voodoo.UI.Presenters
             ResetClickState();
             SwapPiece?.Invoke(indexSwiped, direction);
         }
-
+        
+        private void ShowClusterScore(MatchCluster cluster, Vector2 worldPos)
+        {
+            ScorePopupRequested?.Invoke(cluster.ScoreValue, worldPos);
+        }
+        
         private async UniTask ClearPiece(GamePiecePresenter piecePresenter)
         {
             ResetClickState();
@@ -107,18 +114,34 @@ namespace Voodoo.UI.Presenters
         {
             _view.BlockInput(true);
             ResetClickState();
+            
+            var tasks = new List<UniTask>();
+            
             foreach (MatchCluster cluster in matchesToClear)
             {
-                var tasks = new List<UniTask>();
-                foreach (int Idx in cluster.Indices)
+                GamePiecePresenter piece = null;
+                foreach (int Idx in cluster.Indices) // Animate destroying cluster one by one...
                 {
-                    // Animate destorying clusters one by one...
-                    if (!_activePieces.TryGetValue(Idx, out var piece)) continue;
+                    if (!_activePieces.TryGetValue(Idx, out piece))
+                    {
+                        throw new Exception("Invalid index given inside Match Cluster!");
+                    }
+                    
                     tasks.Add(ClearPiece(piece));
-                    _activePieces.Remove(Idx);   
+                    _activePieces.Remove(Idx);
                 }
-                await UniTask.WhenAll(tasks);
+
+                if (piece != null)
+                {
+                    ShowClusterScore(cluster, piece.GetPosition());
+                }
+
+                // await UniTask.WhenAll(tasks); If awaiting here it will make each animation one after another
             }
+            
+            await UniTask.WhenAll(tasks); // If awaiting here it will all animations run at the same time
+
+            
             _view.BlockInput(false);
         }
         

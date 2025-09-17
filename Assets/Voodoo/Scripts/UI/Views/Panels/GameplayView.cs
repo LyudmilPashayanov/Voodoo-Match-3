@@ -7,9 +7,11 @@ namespace Voodoo.UI.Panels
     {
         [SerializeField] private BoardView _boardView;
         [SerializeField] private HUDView _HUDView;
+        [SerializeField] private FloatingScoreView _floatigScorePrefab;
 
         public BoardView BoardView => _boardView;
         public HUDView HUDView => _HUDView;
+        public FloatingScoreView FloatingScoreViewView => _floatigScorePrefab;
         
         public void ShowLoading()
         {

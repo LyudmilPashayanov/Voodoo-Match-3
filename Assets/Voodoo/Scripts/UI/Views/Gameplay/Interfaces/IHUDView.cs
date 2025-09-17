@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Voodoo.Scripts.UI.Views.Gameplay
 {
@@ -9,8 +10,10 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         event Action QuitToMenuButtonPressed;
         void ShowPauseMenu(bool enableResume);
         void HidePauseMenu();
-        public void UpdateTime(int time);
-        public void UpdateScore(int score);
+        void UpdateTime(int time);
+        void UpdateScore(int score);
         void CleanAndReset();
+        Vector2 GetScorePosition();
+        Transform GetRootTransform();
     }
 }

@@ -36,7 +36,17 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         {
             _pauseMenu.gameObject.SetActive(false);
         }
-        
+
+        public Vector2 GetScorePosition()
+        {
+            return _scoreText.rectTransform.position;
+        }
+
+        public Transform GetRootTransform()
+        {
+            return transform;
+        }
+
         public void UpdateTime(int time)
         {
             _timerText.text = time.ToString();

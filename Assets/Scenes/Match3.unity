@@ -790,6 +790,7 @@ MonoBehaviour:
   _canvasGroup: {fileID: 382502052}
   _boardView: {fileID: 1960207034}
   _HUDView: {fileID: 1013631444}
+  _floatigScorePrefab: {fileID: 2902466851229853784, guid: 9182815f127c001458f09890afb332d3, type: 3}
 --- !u!223 &382502054
 Canvas:
   m_ObjectHideFlags: 0

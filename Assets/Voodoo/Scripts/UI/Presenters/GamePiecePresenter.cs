@@ -10,11 +10,12 @@ namespace Voodoo.UI.Presenters
     {
         private IGamePieceView View { get; }
         private bool _pieceClicked = false;
-        private int _index; 
-
+        private int _index;
+        
         public PieceTypeDefinition TypeDef { get; private set; }
         public event Action<int> Clicked;
         public event Action<int, Direction> Swiped;
+        
         public GamePiecePresenter(IGamePieceView view, PieceTypeDefinition type)
         {
             View = view;
@@ -29,11 +30,11 @@ namespace Voodoo.UI.Presenters
             _index = index;
         }
         
-        public void SetPosition(Vector2 localLocation)
+        private void SetPosition(Vector2 localLocation)
         {
             View.SetPosition(localLocation);
             View.Enable(true); 
-        } 
+        }
         
         public void SetParent(Transform parent)
         {
@@ -44,6 +45,11 @@ namespace Voodoo.UI.Presenters
         {
             SetPosition(spawnLocation);
             await AnimatePiece(toLocation);
+        }
+
+        public Vector2 GetPosition()
+        {
+            return View.GetWorldPosition();
         }
         
         public async UniTask AnimatePiece(Vector2 toLocation)

@@ -20,5 +20,7 @@ namespace Voodoo.Scripts.UI.Views.Gameplay
         UniTask AnimatePiece(Vector2 toLocation);
         void DestroyObject();
         void ResetState();
+        
+        Vector2 GetWorldPosition();
     }
 }
